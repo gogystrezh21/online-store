@@ -11,8 +11,8 @@ const baseConfig = {
     module: {
         rules: [
             {
-                test: /\.s[ac]ss$/i,
-                use: ['style-loader', 'css-loader', 'sass-loader'],
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.tsx?$/,
@@ -39,7 +39,7 @@ const baseConfig = {
         }),
         new CleanWebpackPlugin(),
         new EslintPlugin({ extensions: 'ts' }),
-        new CopyPlugin({ patterns: [{ from: './src/assets', to: './assets' }] }),
+        new CopyPlugin({ patterns: [{ from: './src/assets', to: './assets' }], })
     ],
 };
 
@@ -49,3 +49,4 @@ module.exports = ({ mode }) => {
 
     return merge(baseConfig, envConfig);
 };
+

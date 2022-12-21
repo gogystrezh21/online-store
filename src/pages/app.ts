@@ -5,6 +5,7 @@ import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
+import { Loader } from '../model/model';
 
 class App {
     private static container: HTMLElement = document.body;
@@ -20,7 +21,7 @@ class App {
         let page: Page | null = null;
 
         if (idPage === PagesIds.MainPage) {
-            page = new MainPage(idPage);
+            page = App.createMainPage(idPage);
         } else if (idPage === PagesIds.BasketPage) {
             page = new BasketPage(idPage);
         } else {
@@ -42,7 +43,7 @@ class App {
     }
 
     constructor() {
-        this.initialPage = new MainPage('main-page');
+        this.initialPage = App.createMainPage(PagesIds.MainPage);
         this.header = new Header('header', 'header');
     }
 
@@ -50,6 +51,14 @@ class App {
         App.container.append(this.header.render());
         App.renderNewPage('main-page');
         this.enableRoute();
+    }
+
+    static createMainPage(id: string): MainPage {
+        const page = new MainPage(id);
+        const loader = new Loader();
+        loader.load().then((data) => (page.data = data));
+
+        return page;
     }
 }
 

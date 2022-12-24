@@ -5,7 +5,7 @@ import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
-import { Loader } from '../model/model';
+import { Loader, Model } from '../model/model';
 
 class App {
     private static container: HTMLElement = document.body;
@@ -54,9 +54,10 @@ class App {
     }
 
     static createMainPage(id: string): MainPage {
-        const page = new MainPage(id);
+        const model = new Model();
+        const page = new MainPage(id, model);
         const loader = new Loader();
-        loader.load().then((data) => (page.data = data));
+        loader.load().then((data) => (model.data = data));
 
         return page;
     }

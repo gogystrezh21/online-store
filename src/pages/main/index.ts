@@ -1,20 +1,26 @@
+import { BrandFilter } from '../../components/brand-filter';
+import { CategoryFilter } from '../../components/category-filter';
+import { DoubleSlider } from '../../components/double-slider/double-slider';
 import Page from '../../components/templates/page';
-import { IData } from '../../model/model';
+import { Model } from '../../model/model';
 
 class MainPage extends Page {
     static TextObject = {
         MainTitle: 'Main Page',
     };
 
-    private _data: IData | null = null;
+    private model: Model;
+    private categoryFilter: CategoryFilter;
+    private brandFilter: BrandFilter;
+    private doubleSlider: DoubleSlider;
 
-    constructor(id: string) {
+    constructor(id: string, model: Model) {
         super(id);
-    }
-
-    set data(data: IData) {
-        this._data = data;
-        this.rerender();
+        this.model = model;
+        this.categoryFilter = new CategoryFilter(model);
+        this.brandFilter = new BrandFilter(model);
+        this.model.addEventListener('change', this.rerender.bind(this));
+        this.doubleSlider = new DoubleSlider(model);
     }
 
     render() {
@@ -31,6 +37,9 @@ class MainPage extends Page {
 
         const filters = document.createElement('div');
         filters.className = 'col-4';
+        filters.append(this.categoryFilter.render());
+        filters.append(this.brandFilter.render());
+        filters.append(this.doubleSlider.render());
         containerRow.append(filters);
 
         const products = document.createElement('div');
@@ -41,37 +50,35 @@ class MainPage extends Page {
         productsGrid.className = 'row';
         products.append(productsGrid);
 
-        if (this._data !== null) {
-            for (const product of this._data.products) {
-                const productCol = document.createElement('div');
-                productCol.className = 'col-4';
-                productsGrid.appendChild(productCol);
+        for (const product of this.model.filteredProducts) {
+            const productCol = document.createElement('div');
+            productCol.className = 'col-4';
+            productsGrid.appendChild(productCol);
 
-                const card = document.createElement('div');
-                card.className = 'card mb-3';
-                productCol.appendChild(card);
+            const card = document.createElement('div');
+            card.className = 'card mb-3';
+            productCol.appendChild(card);
 
-                const img = document.createElement('img');
-                img.className = 'card-img-top';
-                img.src = product.thumbnail;
-                img.style.objectFit = 'contain';
-                img.style.height = '200px';
-                card.appendChild(img);
+            const img = document.createElement('img');
+            img.className = 'card-img-top';
+            img.src = product.thumbnail;
+            img.style.objectFit = 'contain';
+            img.style.height = '200px';
+            card.appendChild(img);
 
-                const cardBody = document.createElement('div');
-                cardBody.className = 'card-body';
-                card.appendChild(cardBody);
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+            card.appendChild(cardBody);
 
-                const h5 = document.createElement('h5');
-                h5.className = 'card-title';
-                h5.textContent = product.title;
-                cardBody.appendChild(h5);
+            const h5 = document.createElement('h5');
+            h5.className = 'card-title';
+            h5.textContent = product.title;
+            cardBody.appendChild(h5);
 
-                const p = document.createElement('p');
-                p.className = 'card-text';
-                p.textContent = product.description;
-                cardBody.appendChild(p);
-            }
+            const p = document.createElement('p');
+            p.className = 'card-text';
+            p.textContent = product.description;
+            cardBody.appendChild(p);
         }
 
         return this.container;

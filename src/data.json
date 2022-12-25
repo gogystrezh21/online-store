@@ -430,7 +430,7 @@
   "brands": ["Apple", "Huawei", "HP Pavilion", "Infinix", "Jet", "Lenovo", "LG", "MultiGame", "Microsoft Surface", "OPPO", "Philips", "Samsung", "TOP"],
   "categories": ["smartphones", "laptops", "processors", "monitors"],
   "price": {
-    "min": 217,
+    "min": 171,
     "max": 1749
   },
   "stock": {

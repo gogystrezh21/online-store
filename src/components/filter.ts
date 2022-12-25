@@ -1,5 +1,6 @@
 export abstract class Filter {
     checkboxes: HTMLInputElement[];
+    ul: HTMLUListElement;
     constructor() {
         this.onChecked = this.onChecked.bind(this);
         this.checkboxes = [];
@@ -10,7 +11,33 @@ export abstract class Filter {
 
     render(): HTMLUListElement {
         this.checkboxes = [];
-        const ul = document.createElement('ul') as HTMLUListElement;
+        this.ul = document.createElement('ul') as HTMLUListElement;
+        this.renderParameters();
+        return this.ul;
+    }
+
+    onChecked(): void {
+        const arr = [];
+        for (const checkbox of this.checkboxes) {
+            if (checkbox.checked) {
+                arr.push(checkbox.value);
+            }
+        }
+        console.log(arr);
+        this.selectedParameters = arr;
+    }
+
+    rerender(): void {
+        this.renderParameters();
+    }
+
+    renderParameters(): void {
+        for (const checkbox of this.checkboxes) {
+            checkbox.parentElement?.remove();
+            checkbox.removeEventListener('change', this.onChecked);
+        }
+        this.checkboxes = [];
+
         for (const parameter of this.parameters) {
             const li = document.createElement('li') as HTMLLIElement;
             const checkbox = document.createElement('input') as HTMLInputElement;
@@ -23,19 +50,7 @@ export abstract class Filter {
             const text = document.createTextNode(parameter);
             label.append(checkbox, text);
             li.append(label);
-            ul.append(li);
+            this.ul.append(li);
         }
-        return ul;
-    }
-
-    onChecked() {
-        const arr = [];
-        for (const checkbox of this.checkboxes) {
-            if (checkbox.checked) {
-                arr.push(checkbox.value);
-            }
-        }
-        console.log(arr);
-        this.selectedParameters = arr;
     }
 }

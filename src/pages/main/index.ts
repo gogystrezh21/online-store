@@ -12,7 +12,9 @@ class MainPage extends Page {
     private model: Model;
     private categoryFilter: CategoryFilter;
     private brandFilter: BrandFilter;
-    private doubleSlider: DoubleSlider;
+    private priceSlider: DoubleSlider;
+    private stockSlider: DoubleSlider;
+    private productsGrid: HTMLDivElement;
 
     constructor(id: string, model: Model) {
         super(id);
@@ -20,7 +22,8 @@ class MainPage extends Page {
         this.categoryFilter = new CategoryFilter(model);
         this.brandFilter = new BrandFilter(model);
         this.model.addEventListener('change', this.rerender.bind(this));
-        this.doubleSlider = new DoubleSlider(model);
+        this.priceSlider = new DoubleSlider(model.priceModel);
+        this.stockSlider = new DoubleSlider(model.stockModel);
     }
 
     render() {
@@ -39,21 +42,29 @@ class MainPage extends Page {
         filters.className = 'col-4';
         filters.append(this.categoryFilter.render());
         filters.append(this.brandFilter.render());
-        filters.append(this.doubleSlider.render());
+        filters.append(this.priceSlider.render());
+        filters.append(this.stockSlider.render());
         containerRow.append(filters);
 
         const products = document.createElement('div');
         products.className = 'col-8';
         containerRow.append(products);
 
-        const productsGrid = document.createElement('div');
-        productsGrid.className = 'row';
-        products.append(productsGrid);
+        this.productsGrid = document.createElement('div');
+        this.productsGrid.className = 'row';
+        products.append(this.productsGrid);
 
+        this.renderProducts();
+
+        return this.container;
+    }
+
+    renderProducts() {
+        this.productsGrid.innerHTML = '';
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
-            productsGrid.appendChild(productCol);
+            this.productsGrid.appendChild(productCol);
 
             const card = document.createElement('div');
             card.className = 'card mb-3';
@@ -80,13 +91,14 @@ class MainPage extends Page {
             p.textContent = product.description;
             cardBody.appendChild(p);
         }
-
-        return this.container;
     }
 
     rerender() {
-        this.container.innerHTML = '';
-        this.render();
+        this.renderProducts();
+        this.brandFilter.rerender();
+        this.categoryFilter.rerender();
+        this.priceSlider.rerender();
+        this.stockSlider.rerender();
     }
 }
 

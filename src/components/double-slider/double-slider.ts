@@ -1,4 +1,4 @@
-import { Model } from '../../model/model';
+import { RangeModelView } from '../../model/model';
 import './double-slider.css';
 
 export class DoubleSlider {
@@ -8,10 +8,10 @@ export class DoubleSlider {
     private rangeColor = '#25daa5';
     private formValueMin: HTMLDivElement;
     private formValueMax: HTMLDivElement;
-    private model: Model;
+    private modelView: RangeModelView;
 
-    constructor(model: Model) {
-        this.model = model;
+    constructor(modelView: RangeModelView) {
+        this.modelView = modelView;
     }
 
     controlFromSlider() {
@@ -21,7 +21,8 @@ export class DoubleSlider {
         if (from > to) {
             this.fromSlider.value = to.toString();
         }
-        this.formValueMax.textContent = `Min: ${this.fromSlider.value}`;
+        this.modelView.low = Number(this.fromSlider.value);
+        this.formValueMin.textContent = `Min: ${this.fromSlider.value}`;
 
         this.fillSlider();
     }
@@ -35,7 +36,8 @@ export class DoubleSlider {
         } else {
             this.toSlider.value = from.toString();
         }
-        this.formValueMin.textContent = `Max: ${this.toSlider.value}`;
+        this.modelView.high = Number(this.toSlider.value);
+        this.formValueMax.textContent = `Max: ${this.toSlider.value}`;
         this.fillSlider();
     }
 
@@ -64,38 +66,49 @@ export class DoubleSlider {
         const slidersControl = document.createElement('div') as HTMLDivElement;
         slidersControl.className = 'sliders-control';
 
-        const fromSlider = document.createElement('input') as HTMLInputElement;
-        fromSlider.id = 'fromSlider';
-        fromSlider.type = 'range';
-        fromSlider.min = `${this.model.data?.price.min}`;
-        fromSlider.max = `${this.model.data?.price.max}`;
-        fromSlider.value = `${this.model.data?.price.min}`;
-        fromSlider.addEventListener('input', this.controlFromSlider.bind(this));
-        this.fromSlider = fromSlider;
+        this.fromSlider = document.createElement('input') as HTMLInputElement;
+        this.fromSlider.id = 'fromSlider';
+        this.fromSlider.type = 'range';
+        this.fromSlider.addEventListener('input', this.controlFromSlider.bind(this));
 
-        const toSlider = document.createElement('input') as HTMLInputElement;
-        toSlider.id = 'toSlider';
-        toSlider.type = 'range';
-        toSlider.min = `${this.model.data?.price.min}`;
-        toSlider.max = `${this.model.data?.price.max}`;
-        toSlider.value = `${this.model.data?.price.max}`;
-        toSlider.addEventListener('input', this.controlToSlider.bind(this));
-        this.toSlider = toSlider;
+        this.toSlider = document.createElement('input') as HTMLInputElement;
+        this.toSlider.id = 'toSlider';
+        this.toSlider.type = 'range';
+        this.toSlider.addEventListener('input', this.controlToSlider.bind(this));
 
         const formValues = document.createElement('div') as HTMLDivElement;
         formValues.className = 'form-values';
 
         this.formValueMin = document.createElement('div') as HTMLDivElement;
-        this.formValueMin.textContent = `Min: ${fromSlider.value}`;
         this.formValueMax = document.createElement('div') as HTMLDivElement;
-        this.formValueMax.textContent = `Max: ${toSlider.value}`;
 
         rangeContainer.append(slidersControl, formValues);
-        slidersControl.append(fromSlider, toSlider);
+        slidersControl.append(this.fromSlider, this.toSlider);
         formValues.append(this.formValueMin, this.formValueMax);
 
+        this.updateFromSlider();
+        this.updateToSlider();
         this.fillSlider();
 
         return rangeContainer;
+    }
+
+    updateFromSlider() {
+        this.fromSlider.min = `${this.modelView.range.min}`;
+        this.fromSlider.max = `${this.modelView.range.max}`;
+        this.fromSlider.value = `${this.modelView.low}`;
+        this.formValueMin.textContent = `Min: ${this.fromSlider.value}`;
+    }
+
+    updateToSlider() {
+        this.toSlider.min = `${this.modelView.range.min}`;
+        this.toSlider.max = `${this.modelView.range.max}`;
+        this.toSlider.value = `${this.modelView.high}`;
+        this.formValueMax.textContent = `Max: ${this.toSlider.value}`;
+    }
+
+    public rerender(): void {
+        this.updateFromSlider();
+        this.updateToSlider();
     }
 }

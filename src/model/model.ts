@@ -1,3 +1,4 @@
+import { Router } from '../pages/router';
 import { IData, IProduct, IRange } from '../types';
 
 export class Loader {
@@ -14,6 +15,7 @@ export class Model extends EventTarget {
     private _filteredProducts: IProduct[] = [];
     public readonly priceModel: PriceModelView;
     public readonly stockModel: StockModelView;
+    private _router: Router | null;
 
     constructor() {
         super();
@@ -34,13 +36,24 @@ export class Model extends EventTarget {
         this.change();
     }
 
+    set router(router: Router) {
+        this._selectedBrands = router.getQueryParams('brands[]');
+        this._selectedCategories = router.getQueryParams('categories[]');
+        this.priceModel.router = router;
+        this.stockModel.router = router;
+        this._router = router;
+        this.change();
+    }
+
     get selectedCategories(): string[] {
         return this._selectedCategories;
     }
 
     set selectedCategories(arr: string[]) {
-        this._selectedCategories = arr;
-        this.change();
+        if (!this.isStringArraysEquals(this._selectedCategories, arr)) {
+            this._selectedCategories = arr;
+            this.change();
+        }
     }
 
     get selectedBrands(): string[] {
@@ -48,8 +61,10 @@ export class Model extends EventTarget {
     }
 
     set selectedBrands(arr: string[]) {
-        this._selectedBrands = arr;
-        this.change();
+        if (!this.isStringArraysEquals(this._selectedBrands, arr)) {
+            this._selectedBrands = arr;
+            this.change();
+        }
     }
 
     filter() {
@@ -89,7 +104,33 @@ export class Model extends EventTarget {
 
     change() {
         this.filter();
+
+        if (this._router != null) {
+            this._router.setQueryParam('lowPrice', this.priceModel.low.toString());
+            this._router.setQueryParam('highPrice', this.priceModel.high.toString());
+            this._router.setQueryParam('lowStock', this.stockModel.low.toString());
+            this._router.setQueryParam('highStock', this.stockModel.high.toString());
+            this._router.setQueryParam('categories[]', this.selectedCategories);
+            this._router.setQueryParam('brands[]', this.selectedBrands);
+        }
+
         this.dispatchEvent(new CustomEvent('change'));
+    }
+
+    isStringArraysEquals(a1: string[], a2: string[]): boolean {
+        a1 = a1.slice(0);
+        a2 = a2.slice(0);
+        let value: string | undefined;
+        while ((value = a2.pop()) !== undefined) {
+            const index = a1.indexOf(value);
+            if (index == -1) {
+                return false;
+            }
+
+            a1.splice(index, 1);
+        }
+
+        return a1.length == 0;
     }
 }
 
@@ -98,32 +139,40 @@ export abstract class RangeModelView extends EventTarget {
     private _low = 0;
     private _high = 1;
 
-    set range(range: IRange) {
-        this._range = range;
-        this._low = this._range.min;
-        this._high = this._range.max;
-        this.dispatchEvent(new CustomEvent('change'));
+    public abstract set router(router: Router);
+
+    public set range(range: IRange) {
+        if (this._range.min != range.min || this._range.max != range.max) {
+            this._range = range;
+            this.low = this._range.min;
+            this.high = this._range.max;
+            this.dispatchEvent(new CustomEvent('change'));
+        }
     }
 
-    get range() {
+    public get range(): IRange {
         return this._range;
     }
 
-    set low(min: number) {
-        this._low = min;
-        this.dispatchEvent(new CustomEvent('change'));
+    public set low(min: number) {
+        if (this._low != min) {
+            this._low = min;
+            this.dispatchEvent(new CustomEvent('change'));
+        }
     }
 
-    get low() {
+    public get low(): number {
         return this._low;
     }
 
     set high(max: number) {
-        this._high = max;
-        this.dispatchEvent(new CustomEvent('change'));
+        if (this._high != max) {
+            this._high = max;
+            this.dispatchEvent(new CustomEvent('change'));
+        }
     }
 
-    get high() {
+    get high(): number {
         return this._high;
     }
 
@@ -140,6 +189,17 @@ export class PriceModelView extends RangeModelView {
         }
         return filteredPriceProducts;
     }
+
+    set router(router: Router) {
+        const paramLow = router.getQueryParam('lowPrice');
+        const paramHigh = router.getQueryParam('highPrice');
+        if (paramLow !== null) {
+            this.low = Number(paramLow);
+        }
+        if (paramHigh !== null) {
+            this.high = Number(paramHigh);
+        }
+    }
 }
 
 export class StockModelView extends RangeModelView {
@@ -151,5 +211,16 @@ export class StockModelView extends RangeModelView {
             }
         }
         return filteredStockProducts;
+    }
+
+    set router(router: Router) {
+        const paramLow = router.getQueryParam('lowStock');
+        const paramHigh = router.getQueryParam('highStock');
+        if (paramLow !== null) {
+            this.low = Number(paramLow);
+        }
+        if (paramHigh !== null) {
+            this.high = Number(paramHigh);
+        }
     }
 }

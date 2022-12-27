@@ -53,14 +53,18 @@ class MainPage extends Page {
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row';
         products.append(this.productsGrid);
-
+        console.log('productsGrid created');
         this.renderProducts();
 
         return this.container;
     }
 
     renderProducts() {
-        this.productsGrid.innerHTML = '';
+        if (this.productsGrid) {
+            console.log('productsGrid true');
+            this.productsGrid.innerHTML = '';
+        }
+        console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';

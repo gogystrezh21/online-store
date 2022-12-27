@@ -1,6 +1,6 @@
 export const enum PagesIds {
-    MainPage = 'main-page',
-    BasketPage = 'basket-page',
+    MainPage = '/main-page',
+    BasketPage = '/basket-page',
 }
 
 export const enum ErrorTypes {

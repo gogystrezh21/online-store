@@ -110,5 +110,6 @@ export class DoubleSlider {
     public rerender(): void {
         this.updateFromSlider();
         this.updateToSlider();
+        this.fillSlider();
     }
 }

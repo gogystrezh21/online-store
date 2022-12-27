@@ -94,7 +94,7 @@
             "discountPercentage": 11.02,
             "rating": 4.57,
             "stock": 83,
-            "brand": "APPle",
+            "brand": "Apple",
             "category": "laptops",
             "thumbnail": "https://i.dummyjson.com/data/products/6/thumbnail.png",
             "images": [
@@ -440,9 +440,13 @@
         "Samsung",
         "TOP"
     ],
-    "Smartphones": ["Apple", "Samsung", "OPPO", "Huawei"],
-    "Laptops": ["Apple", "Samsung", "Microsoft Surface", "Infinix", "HP Pavilion"],
-    "Processors": ["Jet", "Lenovo", "MultiGame", "TOP"],
-    "Monitors": ["Samsung", "LG", "Philips"],
-    "categories": ["Smartphones", "Laptops", "Processors", "Monitors"]
+    "categories": ["smartphones", "laptops", "processors", "monitors"],
+    "price": {
+        "min": 171,
+        "max": 1749
+    },
+    "stock": {
+        "min": 26,
+        "max": 146
+    }
 }

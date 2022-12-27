@@ -1,1 +1,1 @@
-export abstract class Search {};
+export abstract class Search {}

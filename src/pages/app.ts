@@ -5,24 +5,26 @@ import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
-import { Loader } from '../model/model';
+import { Loader, Model } from '../model/model';
+import { Router } from './router';
 
 class App {
     private static container: HTMLElement = document.body;
     private static defaultPageId = 'current-page';
     private initialPage: MainPage;
     private header: Header;
+    private router: Router;
 
-    static renderNewPage(idPage: string) {
+    static renderNewPage(idPage: string, router: Router) {
         const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
         if (currentPageHTML) {
             currentPageHTML.remove();
         }
         let page: Page | null = null;
 
-        if (idPage.includes(PagesIds.MainPage)) {
-            page = App.createMainPage(idPage);
-        } else if (idPage == PagesIds.BasketPage) {
+        if (idPage === PagesIds.MainPage) {
+            page = App.createMainPage(idPage, router);
+        } else if (idPage === PagesIds.BasketPage) {
             page = new BasketPage(idPage);
         } else {
             page = new ErrorPage(idPage, ErrorTypes.Error_404);
@@ -37,27 +39,33 @@ class App {
 
     private enableRoute() {
         window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.slice(1);
-            App.renderNewPage(hash);
-            console.log(2);
+            this.router.update();
+            App.renderNewPage(this.router.pathname, this.router);
         });
     }
 
     constructor() {
-        this.initialPage = App.createMainPage(PagesIds.MainPage);
+        this.router = new Router();
+        this.initialPage = App.createMainPage(PagesIds.MainPage, this.router);
         this.header = new Header('header', 'header');
     }
 
     start() {
         App.container.append(this.header.render());
-        App.renderNewPage('main-page');
+        App.renderNewPage('/main-page', this.router);
         this.enableRoute();
     }
 
-    static createMainPage(id: string): MainPage {
-        const page = new MainPage(id);
+    static createMainPage(id: string, router: Router): MainPage {
+        const model = new Model();
+        const page = new MainPage(id, model);
         const loader = new Loader();
-        loader.load().then((data) => (page.data = data));
+
+        loader.load().then((data) => {
+            model.data = data;
+            model.router = router;
+        });
+
         return page;
     }
 }

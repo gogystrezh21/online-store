@@ -22,7 +22,6 @@ class App {
 
         if (idPage.includes(PagesIds.MainPage)) {
             page = App.createMainPage(idPage);
-            console.log(1);
         } else if (idPage == PagesIds.BasketPage) {
             page = new BasketPage(idPage);
         } else {

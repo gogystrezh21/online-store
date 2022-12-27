@@ -94,34 +94,10 @@ class MainPage extends Page {
                 p.textContent = product.description;
                 cardBody.appendChild(p);
 
-                bigGrid.addEventListener('click', () => {
-                    smallGrid.classList.remove('active');
-                    bigGrid.classList.add('active');
-                    productCol.className = 'col-4';
-                    img.style.height = '200px';
-                    p.style.display = 'block';
-                    h5.style.fontSize = '1.25rem';
-                });
+                let val = input?.value.trim().toLowerCase();
+                const elasticItems = document.querySelectorAll<HTMLElement>('.row.grid>*');
 
-                smallGrid.addEventListener('click', () => {
-                    smallGrid.classList.add('active');
-                    bigGrid.classList.remove('active');
-                    productCol.className = 'col-2';
-                    img.style.height = '100px';
-                    p.style.display = 'none';
-                    h5.style.fontSize = '14px';
-                });
-
-                input.oninput = function () {
-                    const val = input?.value.trim().toLowerCase();
-                    const elasticItems = document.querySelectorAll<HTMLElement>('.row.grid>*');
-                    // const url = '#' + PagesIds.MainPage + '&search?' + '=' + val;
-                    // localStorage.setItem('formData', val);
-                    // const formData = localStorage.getItem('formData');
-                    // if (localStorage.getItem('formData')) {
-                    //    form.elements =
-                    // }
-                    // location.hash = url;
+                const searcher = () => {
                     if (val != '') {
                         elasticItems.forEach(function (elem) {
                             if (elem.innerText.toLowerCase().search(val) == -1) {
@@ -135,8 +111,58 @@ class MainPage extends Page {
                             elem.classList.remove('hide');
                         });
                     }
+                };
+
+                bigGrid.addEventListener('click', () => {
+                    smallGrid.classList.remove('active');
+                    bigGrid.classList.add('active');
+                    productCol.className = 'col-4';
+                    localStorage.setItem('style', productCol.className);
+                    img.style.height = '200px';
+                    p.style.display = 'block';
+                    h5.style.fontSize = '1.25rem';
+                    searcher();
+                });
+
+                smallGrid.addEventListener('click', () => {
+                    smallGrid.classList.add('active');
+                    bigGrid.classList.remove('active');
+                    productCol.className = 'col-2';
+                    localStorage.setItem('style', productCol.className);
+                    img.style.height = '100px';
+                    p.style.display = 'none';
+                    h5.style.fontSize = '14px';
+                    searcher();
+                });
+
+                if (localStorage.getItem('style') === 'col-2') {
+                    smallGrid.classList.add('active');
+                    bigGrid.classList.remove('active');
+                    productCol.className = 'col-2';
+                    img.style.height = '100px';
+                    p.style.display = 'none';
+                    h5.style.fontSize = '14px';
+                    searcher();
+                } else {
+                    productCol.className = 'col-4';
+                    img.style.height = '200px';
+                    p.style.display = 'block';
+                    h5.style.fontSize = '1.25rem';
+                    searcher();
+                }
+
+                input.oninput = function () {
+                    // const url = '#' + PagesIds.MainPage + '&search?' + '=' + val;
+                    val = input.value;
+                    localStorage.setItem('formData', val);
+                    searcher();
                     // location.href = url;
                 };
+
+                if (localStorage.getItem('formData')) {
+                    input.value = localStorage.getItem('formData') as string;
+                    searcher();
+                }
             }
         }
 

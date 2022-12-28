@@ -4,6 +4,7 @@ import { DoubleSlider } from '../../components/double-slider/double-slider';
 import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 // import { PagesIds } from '../../types';
+import { Router } from '../../pages/router';
 
 class MainPage extends Page {
     static TextObject = {
@@ -140,16 +141,17 @@ class MainPage extends Page {
                 }
             };
             input.oninput = function () {
-                // const url = '#' + PagesIds.MainPage + '&search?' + '=' + val;
                 val = input.value;
                 localStorage.setItem('formData', val);
                 searcher();
-                // window.location.href = url;
+                new Router().setQueryParam('search', val);
             };
             if (localStorage.getItem('formData')) {
                 input.value = localStorage.getItem('formData') as string;
                 searcher();
             }
+
+            new Router().setQueryParam('', 'bigGrid');
 
             bigGrid.addEventListener('click', () => {
                 bigGrid.removeEventListener;
@@ -160,6 +162,7 @@ class MainPage extends Page {
                 img.style.height = '200px';
                 p.style.display = 'block';
                 h5.style.fontSize = '1.25rem';
+                new Router().setQueryParam('', 'bigGrid');
                 searcher();
             });
 
@@ -171,6 +174,7 @@ class MainPage extends Page {
                 img.style.height = '100px';
                 p.style.display = 'none';
                 h5.style.fontSize = '14px';
+                new Router().setQueryParam('', 'smallGrid');
                 searcher();
             });
 

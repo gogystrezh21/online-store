@@ -5,7 +5,7 @@ import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
-import { Loader, Model } from '../model/model';
+import { Model } from '../model/model';
 import { Router } from './router';
 
 class App {
@@ -38,6 +38,7 @@ class App {
     }
 
     private enableRoute() {
+        console.log('enableRoute');
         window.addEventListener('hashchange', () => {
             this.router.update();
             App.renderNewPage(this.router.pathname, this.router);
@@ -51,21 +52,16 @@ class App {
     }
 
     start() {
+        console.log('App start');
         App.container.append(this.header.render());
         App.renderNewPage('/main-page', this.router);
         this.enableRoute();
     }
 
     static createMainPage(id: string, router: Router): MainPage {
+        console.log('create main-page');
         const model = new Model();
-        const page = new MainPage(id, model);
-        const loader = new Loader();
-
-        loader.load().then((data) => {
-            model.data = data;
-            model.router = router;
-        });
-
+        const page = new MainPage(id, model, router);
         return page;
     }
 }

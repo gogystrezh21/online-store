@@ -28,7 +28,6 @@ export class Router {
             this.url.searchParams.set(key, value);
         }
         const newUrl = '#' + this.url.pathname + this.url.search;
-        console.log(this.url.pathname);
 
         window.history.replaceState({}, '', newUrl);
     }

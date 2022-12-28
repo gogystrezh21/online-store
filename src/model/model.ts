@@ -95,7 +95,6 @@ export class Model extends EventTarget {
         }
         current = this.priceModel.filterByRange(current);
         this._filteredProducts = this.stockModel.filterByRange(current);
-        console.log(this._filteredProducts);
     }
 
     get filteredProducts(): IProduct[] {
@@ -103,6 +102,7 @@ export class Model extends EventTarget {
     }
 
     change() {
+        console.log('change model');
         this.filter();
 
         if (this._router != null) {
@@ -146,6 +146,7 @@ export abstract class RangeModelView extends EventTarget {
             this._range = range;
             this.low = this._range.min;
             this.high = this._range.max;
+            console.log('change range model view');
             this.dispatchEvent(new CustomEvent('change'));
         }
     }

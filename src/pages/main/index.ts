@@ -2,7 +2,8 @@ import { BrandFilter } from '../../components/brand-filter';
 import { CategoryFilter } from '../../components/category-filter';
 import { DoubleSlider } from '../../components/double-slider/double-slider';
 import Page from '../../components/templates/page';
-import { Model } from '../../model/model';
+import { Model, Loader } from '../../model/model';
+import { Router } from '../router';
 
 class MainPage extends Page {
     static TextObject = {
@@ -15,10 +16,12 @@ class MainPage extends Page {
     private priceSlider: DoubleSlider;
     private stockSlider: DoubleSlider;
     private productsGrid: HTMLDivElement;
+    private router: Router;
 
-    constructor(id: string, model: Model) {
+    constructor(id: string, model: Model, router: Router) {
         super(id);
         this.model = model;
+        this.router = router;
         this.categoryFilter = new CategoryFilter(model);
         this.brandFilter = new BrandFilter(model);
         this.model.addEventListener('change', this.rerender.bind(this));
@@ -27,6 +30,7 @@ class MainPage extends Page {
     }
 
     render() {
+        console.log('start render main-page');
         const title = this.createTitle(MainPage.TextObject.MainTitle);
         this.container.append(title);
 
@@ -53,18 +57,23 @@ class MainPage extends Page {
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row';
         products.append(this.productsGrid);
-        console.log('productsGrid created');
         this.renderProducts();
+
+        const loader = new Loader();
+
+        loader.load().then((data) => {
+            this.model.data = data;
+            this.model.router = this.router;
+        });
 
         return this.container;
     }
 
     renderProducts() {
         if (this.productsGrid) {
-            console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
-        console.log('create products');
+        console.log('render products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
@@ -98,6 +107,7 @@ class MainPage extends Page {
     }
 
     rerender() {
+        console.log('start rerender');
         this.renderProducts();
         this.brandFilter.rerender();
         this.categoryFilter.rerender();

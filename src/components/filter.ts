@@ -23,7 +23,6 @@ export abstract class Filter {
                 arr.push(checkbox.value);
             }
         }
-        console.log(arr);
         this.selectedParameters = arr;
     }
 
@@ -37,7 +36,6 @@ export abstract class Filter {
             checkbox.removeEventListener('change', this.onChecked);
         }
         this.checkboxes = [];
-
         for (const parameter of this.parameters) {
             const li = document.createElement('li') as HTMLLIElement;
             const checkbox = document.createElement('input') as HTMLInputElement;

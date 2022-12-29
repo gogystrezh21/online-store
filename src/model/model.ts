@@ -16,6 +16,7 @@ export class Model extends EventTarget {
     public readonly priceModel: PriceModelView;
     public readonly stockModel: StockModelView;
     private _router: Router | null;
+    private _selectedSort: string;
 
     constructor() {
         super();
@@ -39,6 +40,10 @@ export class Model extends EventTarget {
     set router(router: Router) {
         this._selectedBrands = router.getQueryParams('brands[]');
         this._selectedCategories = router.getQueryParams('categories[]');
+        const selectParam = router.getQueryParam('sort');
+        if (selectParam != null) {
+            this._selectedSort = selectParam;
+        }
         this.priceModel.router = router;
         this.stockModel.router = router;
         this._router = router;
@@ -65,6 +70,18 @@ export class Model extends EventTarget {
             this._selectedBrands = arr;
             this.change();
         }
+    }
+
+    get selectedSort(): string {
+        return this._selectedSort;
+    }
+
+    set selectedSort(value: string) {
+        console.log('selected sort');
+        if (this._selectedSort != value) {
+            this._selectedSort = value;
+        }
+        this.change();
     }
 
     filter() {
@@ -97,6 +114,25 @@ export class Model extends EventTarget {
         this._filteredProducts = this.stockModel.filterByRange(current);
     }
 
+    sort() {
+        switch (this._selectedSort) {
+            case 'Sort options':
+                break;
+            case 'Sort by price ASC':
+                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => a.price - b.price);
+                break;
+            case 'Sort by price DESC':
+                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => b.price - a.price);
+                break;
+            case 'Sort by rating ASC':
+                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => a.rating - b.rating);
+                break;
+            case 'Sort by rating DESC':
+                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => b.rating - a.rating);
+                break;
+        }
+    }
+
     get filteredProducts(): IProduct[] {
         return this._filteredProducts;
     }
@@ -104,6 +140,7 @@ export class Model extends EventTarget {
     change() {
         console.log('change model');
         this.filter();
+        this.sort();
 
         if (this._router != null) {
             this._router.setQueryParam('lowPrice', this.priceModel.low.toString());
@@ -112,6 +149,7 @@ export class Model extends EventTarget {
             this._router.setQueryParam('highStock', this.stockModel.high.toString());
             this._router.setQueryParam('categories[]', this.selectedCategories);
             this._router.setQueryParam('brands[]', this.selectedBrands);
+            this._router.setQueryParam('sort', this.selectedSort);
         }
 
         this.dispatchEvent(new CustomEvent('change'));

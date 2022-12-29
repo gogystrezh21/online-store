@@ -1,6 +1,7 @@
 import { BrandFilter } from '../../components/brand-filter';
 import { CategoryFilter } from '../../components/category-filter';
 import { DoubleSlider } from '../../components/double-slider/double-slider';
+import { Sorter } from '../../components/sorter/sorter';
 import Page from '../../components/templates/page';
 import { Model, Loader } from '../../model/model';
 import { Router } from '../router';
@@ -17,6 +18,7 @@ class MainPage extends Page {
     private stockSlider: DoubleSlider;
     private productsGrid: HTMLDivElement;
     private router: Router;
+    private sorter: Sorter;
 
     constructor(id: string, model: Model, router: Router) {
         super(id);
@@ -27,6 +29,7 @@ class MainPage extends Page {
         this.model.addEventListener('change', this.rerender.bind(this));
         this.priceSlider = new DoubleSlider(model.priceModel);
         this.stockSlider = new DoubleSlider(model.stockModel);
+        this.sorter = new Sorter(model);
     }
 
     render() {
@@ -76,6 +79,7 @@ class MainPage extends Page {
         smallGrid.className = 'small';
         smallGrid.id = 'small';
         search.append(smallGrid);
+        search.append(this.sorter.render());
 
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
@@ -212,6 +216,7 @@ class MainPage extends Page {
         this.categoryFilter.rerender();
         this.priceSlider.rerender();
         this.stockSlider.rerender();
+        this.sorter.rerender();
     }
 }
 

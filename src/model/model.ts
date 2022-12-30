@@ -17,6 +17,7 @@ export class Model extends EventTarget {
     public readonly stockModel: StockModelView;
     private _router: Router | null;
     private _selectedSort: string;
+    private _numberProducts = 25;
 
     constructor() {
         super();
@@ -31,9 +32,13 @@ export class Model extends EventTarget {
     }
 
     set data(value: IData | null) {
+        console.log('set data');
         this._data = value;
         this.priceModel.range = this._data?.price ?? { min: 0, max: 1 };
         this.stockModel.range = this._data?.stock ?? { min: 0, max: 1 };
+        if (this._data != null) {
+            this._numberProducts = this._data.products.length;
+        }
         this.change();
     }
 
@@ -48,6 +53,11 @@ export class Model extends EventTarget {
         this.stockModel.router = router;
         this._router = router;
         this.change();
+    }
+
+    get numberProducts(): number {
+        console.log(this._filteredProducts.length);
+        return this._numberProducts;
     }
 
     get selectedCategories(): string[] {
@@ -112,9 +122,12 @@ export class Model extends EventTarget {
         }
         current = this.priceModel.filterByRange(current);
         this._filteredProducts = this.stockModel.filterByRange(current);
+        this._numberProducts = this._filteredProducts.length;
+        console.log(this._numberProducts);
     }
 
     sort() {
+        console.log('start sort');
         switch (this._selectedSort) {
             case 'Sort options':
                 break;

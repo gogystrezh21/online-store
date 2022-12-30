@@ -19,6 +19,7 @@ class MainPage extends Page {
     private productsGrid: HTMLDivElement;
     private router: Router;
     private sorter: Sorter;
+    private amountProducts: HTMLDivElement = document.createElement('div');
 
     constructor(id: string, model: Model, router: Router) {
         super(id);
@@ -81,6 +82,10 @@ class MainPage extends Page {
         search.append(smallGrid);
         search.append(this.sorter.render());
 
+        this.amountProducts.textContent = '';
+        this.amountProducts.textContent = this.model.numberProducts.toString();
+        search.append(this.amountProducts);
+
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
         products.append(this.productsGrid);
@@ -102,6 +107,8 @@ class MainPage extends Page {
             console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
+        this.amountProducts.textContent = '';
+        this.amountProducts.textContent = this.model.numberProducts.toString();
         console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');

@@ -1,10 +1,12 @@
 import MainPage from '../pages/main/index';
 import Page from '../components/templates/page';
 import BasketPage from './basket';
+import ItemPage from './item';
 import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
+// import JSON from '../data.json';
 import { Model } from '../model/model';
 import { Router } from './router';
 
@@ -16,6 +18,7 @@ class App {
     private router: Router;
 
     static renderNewPage(idPage: string, router: Router) {
+        // const itemId = JSON.products.map((el) => el.id);
         const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
         if (currentPageHTML) {
             currentPageHTML.remove();
@@ -26,6 +29,8 @@ class App {
             page = App.createMainPage(idPage, router);
         } else if (idPage === PagesIds.BasketPage) {
             page = new BasketPage(idPage);
+        } else if (idPage === PagesIds.ItemPage) {
+            page = new ItemPage(idPage);
         } else {
             page = new ErrorPage(idPage, ErrorTypes.Error_404);
         }

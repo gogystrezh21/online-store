@@ -4,9 +4,10 @@ class ItemPage extends Page {
     static TextObject = {
         MainTitle: 'Item Page',
     };
-
-    constructor(id: string) {
+    productId: string;
+    constructor(id: string, productId: string) {
         super(id);
+        this.productId = productId;
     }
 
     render() {

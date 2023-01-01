@@ -2,11 +2,9 @@ import MainPage from '../pages/main/index';
 import Page from '../components/templates/page';
 import BasketPage from './basket';
 import ItemPage from './item';
-import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
-// import JSON from '../data.json';
 import { Model } from '../model/model';
 import { Router } from './router';
 
@@ -18,19 +16,21 @@ class App {
     private router: Router;
 
     static renderNewPage(idPage: string, router: Router) {
-        // const itemId = JSON.products.map((el) => el.id);
         const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
         if (currentPageHTML) {
             currentPageHTML.remove();
         }
         let page: Page | null = null;
+        let matches: RegExpMatchArray | null;
 
-        if (idPage === PagesIds.MainPage) {
+        if (idPage === '/main-page') {
             page = App.createMainPage(idPage, router);
-        } else if (idPage === PagesIds.BasketPage) {
+        } else if (idPage === '/basket-page') {
             page = new BasketPage(idPage);
-        } else if (idPage === PagesIds.ItemPage) {
-            page = new ItemPage(idPage);
+        } else if ((matches = idPage.match(/^\/item-page\/(\d+)$/)) !== null) {
+            console.log(matches);
+            const productId = matches[1];
+            page = new ItemPage(idPage, productId);
         } else {
             page = new ErrorPage(idPage, ErrorTypes.Error_404);
         }
@@ -52,7 +52,7 @@ class App {
 
     constructor() {
         this.router = new Router();
-        this.initialPage = App.createMainPage(PagesIds.MainPage, this.router);
+        this.initialPage = App.createMainPage('/main-page', this.router);
         this.header = new Header('header', 'header');
     }
 

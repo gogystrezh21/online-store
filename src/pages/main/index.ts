@@ -104,12 +104,11 @@ class MainPage extends Page {
             productCol.className = 'col-4';
             this.productsGrid.appendChild(productCol);
 
-            // const productId = product.id;
+            const productId = product.id;
 
             const card = document.createElement('a');
             card.className = 'card mb-3';
-            // card.href = `#${'/item-page' + productId}`;
-            card.href = `#${'/item-page'}`;
+            card.href = `#${'/item-page/' + productId}`;
             productCol.appendChild(card);
 
             const img = document.createElement('img');

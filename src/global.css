@@ -40,3 +40,16 @@
 li {
     list-style: none;
 }
+.col-4 a, .col-2 a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.btn btn-outline-dark {
+    z-index: 2;
+}
+
+.button-card {
+    width: 100%;
+}

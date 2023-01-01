@@ -1,13 +1,12 @@
 import Component from './templates/components';
-import { PagesIds } from '../types';
 
 const Buttons = [
     {
-        id: PagesIds.MainPage,
+        id: '/main-page',
         text: 'Main Page',
     },
     {
-        id: PagesIds.BasketPage,
+        id: '/basket-page',
         text: 'Basket Page',
     },
 ];

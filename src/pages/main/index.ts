@@ -115,8 +115,11 @@ class MainPage extends Page {
             productCol.className = 'col-4';
             this.productsGrid.appendChild(productCol);
 
-            const card = document.createElement('div');
+            const productId = product.id;
+
+            const card = document.createElement('a');
             card.className = 'card mb-3';
+            card.href = `#${'/item-page/' + productId}`;
             productCol.appendChild(card);
 
             const img = document.createElement('img');
@@ -139,6 +142,15 @@ class MainPage extends Page {
             p.className = 'card-text';
             p.textContent = product.description;
             cardBody.appendChild(p);
+
+            const object = document.createElement('object');
+            card.appendChild(object);
+
+            const add = document.createElement('a');
+            add.href = `#${111}`;
+            add.className = 'btn btn-outline-dark button-card';
+            add.textContent = 'Add to basket';
+            object.appendChild(add);
 
             const input = document.getElementById('elastic') as HTMLInputElement;
             let val = input?.value.trim().toLowerCase();
@@ -174,10 +186,9 @@ class MainPage extends Page {
             new Router().setQueryParam('', 'bigGrid');
 
             bigGrid.addEventListener('click', () => {
-                bigGrid.removeEventListener;
+                productCol.className = 'col-4';
                 smallGrid.classList.remove('active');
                 bigGrid.classList.add('active');
-                productCol.className = 'col-4';
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '200px';
                 p.style.display = 'block';
@@ -187,9 +198,9 @@ class MainPage extends Page {
             });
 
             smallGrid.addEventListener('click', () => {
+                productCol.className = 'col-2';
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
-                productCol.className = 'col-2';
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '100px';
                 p.style.display = 'none';

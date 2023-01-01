@@ -1,7 +1,7 @@
 import MainPage from '../pages/main/index';
 import Page from '../components/templates/page';
 import BasketPage from './basket';
-import { PagesIds } from '../types';
+import ItemPage from './item';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
@@ -21,11 +21,16 @@ class App {
             currentPageHTML.remove();
         }
         let page: Page | null = null;
+        let matches: RegExpMatchArray | null;
 
-        if (idPage === PagesIds.MainPage) {
+        if (idPage === '/main-page') {
             page = App.createMainPage(idPage, router);
-        } else if (idPage === PagesIds.BasketPage) {
+        } else if (idPage === '/basket-page') {
             page = new BasketPage(idPage);
+        } else if ((matches = idPage.match(/^\/item-page\/(\d+)$/)) !== null) {
+            console.log(matches);
+            const productId = matches[1];
+            page = new ItemPage(idPage, productId);
         } else {
             page = new ErrorPage(idPage, ErrorTypes.Error_404);
         }
@@ -47,7 +52,7 @@ class App {
 
     constructor() {
         this.router = new Router();
-        this.initialPage = App.createMainPage(PagesIds.MainPage, this.router);
+        this.initialPage = App.createMainPage('/main-page', this.router);
         this.header = new Header('header', 'header');
     }
 

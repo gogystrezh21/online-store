@@ -1,6 +1,7 @@
 import { BrandFilter } from '../../components/brand-filter';
 import { CategoryFilter } from '../../components/category-filter';
 import { DoubleSlider } from '../../components/double-slider/double-slider';
+import { Sorter } from '../../components/sorter/sorter';
 import Page from '../../components/templates/page';
 import { Model, Loader } from '../../model/model';
 import { Router } from '../router';
@@ -17,6 +18,8 @@ class MainPage extends Page {
     private stockSlider: DoubleSlider;
     private productsGrid: HTMLDivElement;
     private router: Router;
+    private sorter: Sorter;
+    private amountProducts: HTMLDivElement = document.createElement('div');
 
     constructor(id: string, model: Model, router: Router) {
         super(id);
@@ -27,6 +30,7 @@ class MainPage extends Page {
         this.model.addEventListener('change', this.rerender.bind(this));
         this.priceSlider = new DoubleSlider(model.priceModel);
         this.stockSlider = new DoubleSlider(model.stockModel);
+        this.sorter = new Sorter(model);
     }
 
     render() {
@@ -76,6 +80,11 @@ class MainPage extends Page {
         smallGrid.className = 'small';
         smallGrid.id = 'small';
         search.append(smallGrid);
+        search.append(this.sorter.render());
+
+        this.amountProducts.textContent = '';
+        this.amountProducts.textContent = this.model.numberProducts.toString();
+        search.append(this.amountProducts);
 
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
@@ -98,14 +107,19 @@ class MainPage extends Page {
             console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
+        this.amountProducts.textContent = '';
+        this.amountProducts.textContent = this.model.numberProducts.toString();
         console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
             this.productsGrid.appendChild(productCol);
 
-            const card = document.createElement('div');
+            const productId = product.id;
+
+            const card = document.createElement('a');
             card.className = 'card mb-3';
+            card.href = `#${'/item-page/' + productId}`;
             productCol.appendChild(card);
 
             const img = document.createElement('img');
@@ -128,6 +142,15 @@ class MainPage extends Page {
             p.className = 'card-text';
             p.textContent = product.description;
             cardBody.appendChild(p);
+
+            const object = document.createElement('object');
+            card.appendChild(object);
+
+            const add = document.createElement('a');
+            add.href = `#${111}`;
+            add.className = 'btn btn-outline-dark button-card';
+            add.textContent = 'Add to basket';
+            object.appendChild(add);
 
             const input = document.getElementById('elastic') as HTMLInputElement;
             let val = input?.value.trim().toLowerCase();
@@ -163,10 +186,9 @@ class MainPage extends Page {
             new Router().setQueryParam('', 'bigGrid');
 
             bigGrid.addEventListener('click', () => {
-                bigGrid.removeEventListener;
+                productCol.className = 'col-4';
                 smallGrid.classList.remove('active');
                 bigGrid.classList.add('active');
-                productCol.className = 'col-4';
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '200px';
                 p.style.display = 'block';
@@ -176,9 +198,9 @@ class MainPage extends Page {
             });
 
             smallGrid.addEventListener('click', () => {
+                productCol.className = 'col-2';
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
-                productCol.className = 'col-2';
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '100px';
                 p.style.display = 'none';
@@ -212,6 +234,7 @@ class MainPage extends Page {
         this.categoryFilter.rerender();
         this.priceSlider.rerender();
         this.stockSlider.rerender();
+        this.sorter.rerender();
     }
 }
 

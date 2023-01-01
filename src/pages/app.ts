@@ -5,14 +5,17 @@ import { PagesIds } from '../types';
 import Header from '../components/header';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
+import { Model } from '../model/model';
+import { Router } from './router';
 
 class App {
     private static container: HTMLElement = document.body;
     private static defaultPageId = 'current-page';
     private initialPage: MainPage;
     private header: Header;
+    private router: Router;
 
-    static renderNewPage(idPage: string) {
+    static renderNewPage(idPage: string, router: Router) {
         const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
         if (currentPageHTML) {
             currentPageHTML.remove();
@@ -20,7 +23,7 @@ class App {
         let page: Page | null = null;
 
         if (idPage === PagesIds.MainPage) {
-            page = new MainPage(idPage);
+            page = App.createMainPage(idPage, router);
         } else if (idPage === PagesIds.BasketPage) {
             page = new BasketPage(idPage);
         } else {
@@ -35,21 +38,31 @@ class App {
     }
 
     private enableRoute() {
+        console.log('enableRoute');
         window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.slice(1);
-            App.renderNewPage(hash);
+            this.router.update();
+            App.renderNewPage(this.router.pathname, this.router);
         });
     }
 
     constructor() {
-        this.initialPage = new MainPage('main-page');
+        this.router = new Router();
+        this.initialPage = App.createMainPage(PagesIds.MainPage, this.router);
         this.header = new Header('header', 'header');
     }
 
     start() {
+        console.log('App start');
         App.container.append(this.header.render());
-        App.renderNewPage('main-page');
+        App.renderNewPage('/main-page', this.router);
         this.enableRoute();
+    }
+
+    static createMainPage(id: string, router: Router): MainPage {
+        console.log('create main-page');
+        const model = new Model();
+        const page = new MainPage(id, model, router);
+        return page;
     }
 }
 

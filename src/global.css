@@ -1,4 +1,42 @@
+@import 'bootstrap';
 .header div {
     display: flex;
     justify-content: space-around;
+}
+
+.row.grid {
+    gap: 20px 0px;
+}
+
+.card {
+    height: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+.big {
+    background-image: url('../src/assets/big.svg');
+    background-size: 40px 40px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    margin-left: 21rem;
+}
+
+.small {
+    background-image: url('../src/assets/small.svg');
+    background-size: 40px 40px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.active {
+    background-color: red;
+}
+
+li {
+    list-style: none;
 }

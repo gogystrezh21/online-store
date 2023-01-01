@@ -39,7 +39,12 @@ const baseConfig = {
         }),
         new CleanWebpackPlugin(),
         new EslintPlugin({ extensions: 'ts' }),
-        new CopyPlugin({ patterns: [{ from: './src/assets', to: './assets' }], })
+        new CopyPlugin({ 
+            patterns: [
+                { from: './src/assets', to: './assets' },
+                { from: './src/data.json', to: './' },
+            ],
+        })
     ],
 };
 

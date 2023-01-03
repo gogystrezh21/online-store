@@ -34,13 +34,14 @@
 }
 
 .active {
-    background-color: red;
+    background-color: #198754;
 }
 
 li {
     list-style: none;
 }
-.col-4 a, .col-2 a {
+.col-4 a,
+.col-2 a {
     text-decoration: none;
     color: black;
     cursor: pointer;
@@ -52,4 +53,18 @@ li {
 
 .button-card {
     width: 100%;
+}
+
+.select {
+    border: 1px solid #198754;
+}
+
+.header-buttons:nth-child(2) {
+    background-image: url('../src/assets/basket.svg');
+    background-size: 60px 60px;
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0;
 }

@@ -82,6 +82,15 @@ class MainPage extends Page {
         search.append(smallGrid);
         search.append(this.sorter.render());
 
+        const counter = document.createElement('div');
+        counter.id = 'counter';
+        form.appendChild(counter);
+
+        const totalPrice = document.createElement('div');
+        totalPrice.id = 'total-price';
+        totalPrice.innerText = `${'Total cost:' + localStorage.getItem('amount') + '$'}`;
+        form.append(totalPrice);
+
         this.amountProducts.textContent = '';
         this.amountProducts.textContent = this.model.numberProducts.toString();
         search.append(this.amountProducts);
@@ -107,13 +116,14 @@ class MainPage extends Page {
             console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
-        this.amountProducts.textContent = '';
-        this.amountProducts.textContent = this.model.numberProducts.toString();
         console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
             this.productsGrid.appendChild(productCol);
+
+            this.amountProducts.textContent = '';
+            this.amountProducts.textContent = this.model.numberProducts.toString();
 
             const productId = product.id;
 
@@ -143,14 +153,55 @@ class MainPage extends Page {
             p.textContent = product.description;
             cardBody.appendChild(p);
 
+            const price = document.createElement('p');
+            price.className = 'price-text';
+            price.textContent = product.price.toString();
+            // price.textContent = `${product.price.toString() + '$'}`;
+            cardBody.appendChild(price);
+
             const object = document.createElement('object');
             card.appendChild(object);
 
             const add = document.createElement('a');
-            add.href = `#${111}`;
-            add.className = 'btn btn-outline-dark button-card';
-            add.textContent = 'Add to basket';
+            const productIdString = productId.toString();
+            if (localStorage.getItem(productIdString)) {
+                card.classList.add('select');
+                price.classList.add('total');
+                add.className = 'btn btn-danger button-card';
+                add.textContent = 'Drop from basket';
+            } else {
+                add.className = 'btn btn-success button-card';
+                add.textContent = 'Add to basket';
+            }
+            add.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (localStorage.getItem(productIdString)) {
+                    localStorage.removeItem(productIdString);
+                    card.classList.remove('select');
+                    price.classList.remove('total');
+                    add.innerText = 'Add to basket';
+                    add.className = 'btn btn-success button-card';
+                } else {
+                    localStorage.setItem(productIdString, JSON.stringify(product));
+                    card.classList.add('select');
+                    price.classList.add('total');
+                    add.innerText = 'Drop from basket';
+                    add.className = 'btn btn-danger button-card';
+                }
+                const sum = Array.from(document.querySelectorAll('.total'));
+                let amount = 0;
+                for (let i = 0, count = sum.length; i < count; i++) {
+                    amount += Number(sum[i].textContent);
+                }
+                localStorage.setItem('amount', amount.toString());
+                console.log(amount);
+                const totalPrice = document.getElementById('total-price') as HTMLDivElement;
+                totalPrice.innerText = `${'Total cost:' + localStorage.getItem('amount') + '$'}`;
+                // console.log(Number(item.innerHTML.replace(/[^0-9]/g, '')));
+            });
+
             object.appendChild(add);
+            const counter = document.getElementById('counter') as HTMLDivElement;
 
             const input = document.getElementById('elastic') as HTMLInputElement;
             let val = input?.value.trim().toLowerCase();
@@ -171,7 +222,13 @@ class MainPage extends Page {
                         elem.classList.remove('hide');
                     });
                 }
+                counter.innerText = Math.min(
+                    Array.from(document.querySelectorAll<HTMLElement>('.open')).length,
+                    Array.from(document.querySelectorAll<HTMLElement>('.open')).length -
+                        Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
+                ).toString();
             };
+
             input.oninput = function () {
                 val = input.value;
                 localStorage.setItem('formData', val);
@@ -186,7 +243,7 @@ class MainPage extends Page {
             new Router().setQueryParam('', 'bigGrid');
 
             bigGrid.addEventListener('click', () => {
-                productCol.className = 'col-4';
+                productCol.className = 'col-4 open';
                 smallGrid.classList.remove('active');
                 bigGrid.classList.add('active');
                 localStorage.setItem('style', productCol.className);
@@ -198,12 +255,12 @@ class MainPage extends Page {
             });
 
             smallGrid.addEventListener('click', () => {
-                productCol.className = 'col-2';
+                productCol.className = 'col-2 open';
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '100px';
-                p.style.display = 'none';
+                p.style.fontSize = '0.1px';
                 h5.style.fontSize = '14px';
                 new Router().setQueryParam('', 'smallGrid');
                 searcher();
@@ -212,15 +269,16 @@ class MainPage extends Page {
             if (localStorage.getItem('style') === 'col-2') {
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
-                productCol.className = 'col-2';
+                productCol.className = 'col-2 open';
                 img.style.height = '100px';
-                p.style.display = 'none';
+                p.style.fontSize = '0.1px';
                 h5.style.fontSize = '14px';
                 searcher();
             } else {
-                productCol.className = 'col-4';
+                productCol.className = 'col-4 open';
                 img.style.height = '200px';
                 p.style.display = 'block';
+                p.style.fontSize = '1rem';
                 h5.style.fontSize = '1.25rem';
                 searcher();
             }
@@ -236,6 +294,8 @@ class MainPage extends Page {
         this.stockSlider.rerender();
         this.sorter.rerender();
     }
+
+    addEvents: () => void;
 }
 
 export default MainPage;

@@ -93,7 +93,8 @@ class ItemPage extends Page {
                 const target = event.target as HTMLImageElement;
                 img.src = target.src;
                 img.alt = 'Slide';
-                img.style.width = '100%';
+                img.style.maxHeight = '500px';
+                img.style.maxWidth = '500px';
                 currentImg.append(img);
             });
             li.append(img);

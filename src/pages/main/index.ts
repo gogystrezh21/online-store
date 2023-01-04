@@ -95,6 +95,7 @@ class MainPage extends Page {
         const loader = new Loader();
 
         loader.load().then((data) => {
+            console.log('start loader');
             this.model.data = data;
             this.model.router = this.router;
         });

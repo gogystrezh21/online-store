@@ -3,7 +3,9 @@ export class Router {
 
     constructor() {
         this.update();
-        this.url.pathname = '/main-page';
+        if (/^\/?$/.test(this.url.pathname)) {
+            this.url.pathname = '/main-page';
+        }
     }
 
     get pathname(): string {

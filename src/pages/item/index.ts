@@ -35,6 +35,32 @@ class ItemPage extends Page {
         this.productContainer = document.createElement('div');
         this.productContainer.className = 'row';
 
+        const breadcrumb = document.createElement('nav');
+        breadcrumb.ariaLabel = 'breadcrumb';
+        breadcrumb.className = 'col-12';
+
+        const breadcrumbArray = [
+            { text: 'Store', link: '#/main-page' },
+            { text: this.currentProduct.category, link: '' },
+            { text: this.currentProduct.brand, link: '' },
+            { text: this.currentProduct.title, link: '' },
+        ];
+        const ol = document.createElement('ol');
+        ol.className = 'breadcrumb';
+
+        for (const obj of breadcrumbArray) {
+            const li = document.createElement('li');
+            li.className = 'breadcrumb-item';
+
+            const a = document.createElement('a');
+            a.textContent = obj.text.toUpperCase();
+            a.href = obj.link;
+            li.append(a);
+            ol.append(li);
+        }
+
+        breadcrumb.append(ol);
+
         const photos = document.createElement('div');
         photos.className = 'col-6';
 
@@ -55,7 +81,10 @@ class ItemPage extends Page {
         for (const url of this.currentProduct.images) {
             const li = document.createElement('li');
             const img = document.createElement('img');
-            img.style.width = '100px';
+            li.style.height = '100px';
+            li.style.width = '100px';
+            img.style.maxHeight = '100px';
+            img.style.maxWidth = '100px';
             img.src = url;
             img.alt = 'Slide';
             img.addEventListener('click', (event) => {
@@ -81,7 +110,7 @@ class ItemPage extends Page {
         const discountPercentage = document.createElement('div');
         discountPercentage.textContent = 'Discount Percentage: ' + this.currentProduct.discountPercentage.toString();
         const rating = document.createElement('div');
-        rating.textContent = 'Rating: ' + this.currentProduct.rating.toString();
+        rating.textContent = 'Rating: ' + this.currentProduct.rating.toString() + '☆';
         const stock = document.createElement('div');
         stock.textContent = 'Stock: ' + this.currentProduct.stock.toString();
         const brand = document.createElement('div');
@@ -114,7 +143,7 @@ class ItemPage extends Page {
 
         buttons.append(price, addToCard, buyNow);
 
-        this.productContainer.append(photos, aboutProduct, buttons);
+        this.productContainer.append(breadcrumb, photos, aboutProduct, buttons);
     }
     load(): void {
         const loader = new Loader();

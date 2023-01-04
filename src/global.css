@@ -59,7 +59,11 @@ li {
     border: 1px solid #198754;
 }
 
-.header-buttons:nth-child(2) {
+#total-price {
+    width: 300px;
+}
+
+.header-buttons:nth-child(3) {
     background-image: url('../src/assets/basket.svg');
     background-size: 60px 60px;
     height: 60px;

@@ -88,8 +88,12 @@ class MainPage extends Page {
 
         const totalPrice = document.createElement('div');
         totalPrice.id = 'total-price';
-        totalPrice.innerText = `${'Total cost:' + localStorage.getItem('amount') + '$'}`;
-        form.append(totalPrice);
+        totalPrice.innerText = `${'Total price:' + localStorage.getItem('amount') + '$'}`;
+        const header = document.querySelector('header>*') as HTMLDivElement;
+        const firstChild = document.querySelectorAll('a')[1] as HTMLElement;
+        console.log(firstChild);
+        header.insertBefore(totalPrice, firstChild);
+        // header.appendChild(totalPrice);
 
         this.amountProducts.textContent = '';
         this.amountProducts.textContent = this.model.numberProducts.toString();

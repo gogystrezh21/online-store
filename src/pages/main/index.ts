@@ -89,13 +89,21 @@ class MainPage extends Page {
 
         const totalPrice = document.createElement('div');
         totalPrice.id = 'total-price';
-        totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
+        if (localStorage.getItem('amount') === null) {
+            totalPrice.innerText = `${'Total price: ' + '0' + ' $'}`;
+        } else {
+            totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
+        }
         const header = document.querySelector('header>*') as HTMLDivElement;
         const firstChild = document.querySelectorAll('a')[1] as HTMLElement;
         header.insertBefore(totalPrice, firstChild);
 
         const count = document.createElement('div');
-        count.innerText = `${localStorage.getItem('count')}`;
+        if (localStorage.getItem('count') === null) {
+            count.innerText = '0';
+        } else {
+            count.innerText = `${localStorage.getItem('count')}`;
+        }
         count.id = 'count';
         firstChild.appendChild(count);
 

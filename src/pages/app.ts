@@ -59,7 +59,7 @@ class App {
     start() {
         console.log('App start');
         App.container.append(this.header.render());
-        App.renderNewPage('/main-page', this.router);
+        App.renderNewPage(this.router.pathname, this.router);
         this.enableRoute();
     }
 

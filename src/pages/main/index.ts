@@ -67,10 +67,15 @@ class MainPage extends Page {
         search.append(form);
 
         const input = document.createElement('input');
-        input.className = 'form-control mr-sm-2';
+        input.className = 'form-control';
+        // input.ariaLabel = 'Default';
         input.id = 'elastic';
         input.placeholder = 'Search product';
         form.append(input);
+
+        const counter = document.createElement('div');
+        counter.id = 'counter';
+        search.append(counter);
 
         const bigGrid = document.createElement('div');
         bigGrid.className = 'big active';
@@ -80,24 +85,23 @@ class MainPage extends Page {
         smallGrid.className = 'small';
         smallGrid.id = 'small';
         search.append(smallGrid);
-        search.append(this.sorter.render());
-
-        const counter = document.createElement('div');
-        counter.id = 'counter';
-        form.appendChild(counter);
+        form.append(this.sorter.render());
 
         const totalPrice = document.createElement('div');
         totalPrice.id = 'total-price';
-        totalPrice.innerText = `${'Total price:' + localStorage.getItem('amount') + '$'}`;
+        totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
         const header = document.querySelector('header>*') as HTMLDivElement;
         const firstChild = document.querySelectorAll('a')[1] as HTMLElement;
-        console.log(firstChild);
         header.insertBefore(totalPrice, firstChild);
-        // header.appendChild(totalPrice);
 
-        this.amountProducts.textContent = '';
-        this.amountProducts.textContent = this.model.numberProducts.toString();
-        search.append(this.amountProducts);
+        const count = document.createElement('div');
+        count.innerText = `${localStorage.getItem('count')}`;
+        count.id = 'count';
+        firstChild.appendChild(count);
+
+        // this.amountProducts.textContent = '';
+        // this.amountProducts.textContent = this.model.numberProducts.toString();
+        // search.append(this.amountProducts);
 
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
@@ -108,6 +112,7 @@ class MainPage extends Page {
         const loader = new Loader();
 
         loader.load().then((data) => {
+            console.log('start loader');
             this.model.data = data;
             this.model.router = this.router;
         });
@@ -134,6 +139,7 @@ class MainPage extends Page {
             const card = document.createElement('a');
             card.className = 'card mb-3';
             card.href = `#${'/item-page/' + productId}`;
+            // card.target = '_blank';
             productCol.appendChild(card);
 
             const img = document.createElement('img');
@@ -159,8 +165,7 @@ class MainPage extends Page {
 
             const price = document.createElement('p');
             price.className = 'price-text';
-            price.textContent = product.price.toString();
-            // price.textContent = `${product.price.toString() + '$'}`;
+            price.textContent = 'Price: ' + product.price.toString() + ' $';
             cardBody.appendChild(price);
 
             const object = document.createElement('object');
@@ -195,13 +200,14 @@ class MainPage extends Page {
                 const sum = Array.from(document.querySelectorAll('.total'));
                 let amount = 0;
                 for (let i = 0, count = sum.length; i < count; i++) {
-                    amount += Number(sum[i].textContent);
+                    amount += Number(sum[i].textContent?.replace(/[^0-9]/g, ''));
                 }
+                localStorage.setItem('count', sum.length.toString());
                 localStorage.setItem('amount', amount.toString());
-                console.log(amount);
                 const totalPrice = document.getElementById('total-price') as HTMLDivElement;
-                totalPrice.innerText = `${'Total cost:' + localStorage.getItem('amount') + '$'}`;
-                // console.log(Number(item.innerHTML.replace(/[^0-9]/g, '')));
+                totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+                const count = document.getElementById('count') as HTMLDivElement;
+                count.innerText = `${localStorage.getItem('count')}`;
             });
 
             object.appendChild(add);
@@ -226,11 +232,14 @@ class MainPage extends Page {
                         elem.classList.remove('hide');
                     });
                 }
-                counter.innerText = Math.min(
-                    Array.from(document.querySelectorAll<HTMLElement>('.open')).length,
-                    Array.from(document.querySelectorAll<HTMLElement>('.open')).length -
-                        Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
-                ).toString();
+                counter.innerText = `${
+                    'Found: ' +
+                    Math.min(
+                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length,
+                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length -
+                            Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
+                    ).toString()
+                }`;
             };
 
             input.oninput = function () {
@@ -298,8 +307,6 @@ class MainPage extends Page {
         this.stockSlider.rerender();
         this.sorter.rerender();
     }
-
-    addEvents: () => void;
 }
 
 export default MainPage;

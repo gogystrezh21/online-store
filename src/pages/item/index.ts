@@ -34,11 +34,15 @@ class ItemPage extends Page {
 
     renderProduct(): void {
         this.productContainer = document.createElement('div');
-        this.productContainer.className = 'row';
+        this.productContainer.className = 'container';
+
+        const productRow = document.createElement('div');
+        productRow.className = 'row';
 
         const breadcrumb = document.createElement('nav');
         breadcrumb.ariaLabel = 'breadcrumb';
         breadcrumb.className = 'col-12';
+        breadcrumb.classList.add('breadcrumb_product');
 
         const breadcrumbArray = [
             { text: 'Store', link: '#/main-page' },
@@ -77,6 +81,7 @@ class ItemPage extends Page {
         const img = document.createElement('img');
         img.src = this.currentProduct.thumbnail;
         img.alt = 'Slide';
+        img.className = 'current-img';
         currentImg.append(img);
 
         const miniPhotos = document.createElement('ul');
@@ -85,10 +90,7 @@ class ItemPage extends Page {
             const li = document.createElement('li');
             const img = document.createElement('img');
             li.className = 'photo-list';
-            li.style.height = '100px';
-            li.style.width = '100px';
-            img.style.maxHeight = '100px';
-            img.style.maxWidth = '100px';
+            img.className = 'min-img';
             img.style.pointerEvents = 'none';
             img.src = url;
             img.alt = 'Slide';
@@ -101,8 +103,7 @@ class ItemPage extends Page {
                     img.src = newImg.src;
                 }
                 img.alt = 'Slide';
-                img.style.maxHeight = '500px';
-                img.style.maxWidth = '500px';
+                img.className = 'current-img';
                 currentImg.append(img);
             });
             li.append(img);
@@ -115,16 +116,22 @@ class ItemPage extends Page {
         aboutProduct.className = 'col-3';
 
         const description = document.createElement('div');
+        description.className = 'description-block';
         description.textContent = 'Description: ' + this.currentProduct.description;
         const discountPercentage = document.createElement('div');
+        discountPercentage.className = 'description-block';
         discountPercentage.textContent = 'Discount Percentage: ' + this.currentProduct.discountPercentage.toString();
         const rating = document.createElement('div');
+        rating.className = 'description-block';
         rating.textContent = 'Rating: ' + this.currentProduct.rating.toString() + '☆';
         const stock = document.createElement('div');
+        stock.className = 'description-block';
         stock.textContent = 'Stock: ' + this.currentProduct.stock.toString();
         const brand = document.createElement('div');
+        brand.className = 'description-block';
         brand.textContent = 'Brand: ' + this.currentProduct.brand;
         const category = document.createElement('div');
+        category.className = 'description-block';
         category.textContent = 'Category: ' + this.currentProduct.category;
 
         aboutProduct.append(description, discountPercentage, rating, stock, brand, category);
@@ -133,6 +140,7 @@ class ItemPage extends Page {
         buttons.className = 'col-3';
 
         const price = document.createElement('div');
+        price.className = 'price';
         price.textContent = '€' + this.currentProduct.price.toString();
 
         const addToCard = document.createElement('button');
@@ -152,7 +160,8 @@ class ItemPage extends Page {
 
         buttons.append(price, addToCard, buyNow);
 
-        this.productContainer.append(breadcrumb, photos, aboutProduct, buttons);
+        productRow.append(breadcrumb, photos, aboutProduct, buttons);
+        this.productContainer.append(productRow);
     }
     load(): void {
         const loader = new Loader();

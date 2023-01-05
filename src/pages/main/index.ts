@@ -121,7 +121,7 @@ class MainPage extends Page {
             const card = document.createElement('a');
             card.className = 'card mb-3';
             card.href = `#${'/item-page/' + productId}`;
-            card.target = '_blank';
+            // card.target = '_blank';
             productCol.appendChild(card);
 
             const img = document.createElement('img');

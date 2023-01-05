@@ -1,0 +1,7 @@
+.photo-list {
+  border: 1px solid rgb(210, 210, 210);
+  margin: 10px 0;
+  box-sizing: content-box;
+  padding: 5px;
+  text-align: center;
+}

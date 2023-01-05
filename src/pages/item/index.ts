@@ -1,6 +1,7 @@
 import Page from '../../components/templates/page';
 import { Loader, Model } from '../../model/model';
 import { IProduct } from '../../types';
+import './index.css';
 
 class ItemPage extends Page {
     static TextObject = {
@@ -54,7 +55,9 @@ class ItemPage extends Page {
 
             const a = document.createElement('a');
             a.textContent = obj.text.toUpperCase();
-            a.href = obj.link;
+            if (obj.link !== '') {
+                a.href = obj.link;
+            }
             li.append(a);
             ol.append(li);
         }
@@ -81,17 +84,22 @@ class ItemPage extends Page {
         for (const url of this.currentProduct.images) {
             const li = document.createElement('li');
             const img = document.createElement('img');
+            li.className = 'photo-list';
             li.style.height = '100px';
             li.style.width = '100px';
             img.style.maxHeight = '100px';
             img.style.maxWidth = '100px';
+            img.style.pointerEvents = 'none';
             img.src = url;
             img.alt = 'Slide';
-            img.addEventListener('click', (event) => {
+            li.addEventListener('click', (event) => {
                 currentImg.innerHTML = '';
                 const img = document.createElement('img');
-                const target = event.target as HTMLImageElement;
-                img.src = target.src;
+                const target = event.target as HTMLLIElement;
+                const newImg = target.querySelector('img');
+                if (newImg !== null) {
+                    img.src = newImg.src;
+                }
                 img.alt = 'Slide';
                 img.style.maxHeight = '500px';
                 img.style.maxWidth = '500px';

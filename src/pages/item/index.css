@@ -35,3 +35,11 @@
 .breadcrumb_product {
   margin-top: 40px;
 }
+
+.col-8 img {
+  width: 100%;
+}
+
+.col-3 button {
+  margin-right: 1rem;
+}

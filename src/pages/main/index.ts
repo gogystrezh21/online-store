@@ -67,10 +67,15 @@ class MainPage extends Page {
         search.append(form);
 
         const input = document.createElement('input');
-        input.className = 'form-control mr-sm-2';
+        input.className = 'form-control';
+        // input.ariaLabel = 'Default';
         input.id = 'elastic';
         input.placeholder = 'Search product';
         form.append(input);
+
+        const counter = document.createElement('div');
+        counter.id = 'counter';
+        search.append(counter);
 
         const bigGrid = document.createElement('div');
         bigGrid.className = 'big active';
@@ -80,11 +85,31 @@ class MainPage extends Page {
         smallGrid.className = 'small';
         smallGrid.id = 'small';
         search.append(smallGrid);
-        search.append(this.sorter.render());
+        form.append(this.sorter.render());
 
-        this.amountProducts.textContent = '';
-        this.amountProducts.textContent = this.model.numberProducts.toString();
-        search.append(this.amountProducts);
+        // const totalPrice = document.createElement('div');
+        // totalPrice.id = 'total-price';
+        // if (localStorage.getItem('amount') === null) {
+        //     totalPrice.innerText = `${'Total price: ' + '0' + ' $'}`;
+        // } else {
+        //     totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
+        // }
+        // const header = document.querySelector('header>*') as HTMLDivElement;
+        // const firstChild = document.querySelectorAll('a')[1] as HTMLElement;
+        // header.insertBefore(totalPrice, firstChild);
+
+        // const count = document.createElement('div');
+        // if (localStorage.getItem('count') === null) {
+        //     count.innerText = '0';
+        // } else {
+        //     count.innerText = `${localStorage.getItem('count')}`;
+        // }
+        // count.id = 'count';
+        // firstChild.appendChild(count);
+
+        // this.amountProducts.textContent = '';
+        // this.amountProducts.textContent = this.model.numberProducts.toString();
+        // search.append(this.amountProducts);
 
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
@@ -108,13 +133,14 @@ class MainPage extends Page {
             console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
-        this.amountProducts.textContent = '';
-        this.amountProducts.textContent = this.model.numberProducts.toString();
         console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
             this.productsGrid.appendChild(productCol);
+
+            this.amountProducts.textContent = '';
+            this.amountProducts.textContent = this.model.numberProducts.toString();
 
             const productId = product.id;
 
@@ -145,14 +171,55 @@ class MainPage extends Page {
             p.textContent = product.description;
             cardBody.appendChild(p);
 
+            const price = document.createElement('p');
+            price.className = 'price-text';
+            price.textContent = 'Price: ' + product.price.toString() + ' $';
+            cardBody.appendChild(price);
+
             const object = document.createElement('object');
             card.appendChild(object);
 
             const add = document.createElement('a');
-            add.href = `#${111}`;
-            add.className = 'btn btn-outline-dark button-card';
-            add.textContent = 'Add to basket';
+            const productIdString = productId.toString();
+            if (localStorage.getItem(productIdString)) {
+                card.classList.add('select');
+                price.classList.add('total');
+                add.className = 'btn btn-danger button-card';
+                add.textContent = 'Drop from basket';
+            } else {
+                add.className = 'btn btn-success button-card';
+                add.textContent = 'Add to basket';
+            }
+            add.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (localStorage.getItem(productIdString)) {
+                    localStorage.removeItem(productIdString);
+                    card.classList.remove('select');
+                    price.classList.remove('total');
+                    add.innerText = 'Add to basket';
+                    add.className = 'btn btn-success button-card';
+                } else {
+                    localStorage.setItem(productIdString, JSON.stringify(product));
+                    card.classList.add('select');
+                    price.classList.add('total');
+                    add.innerText = 'Drop from basket';
+                    add.className = 'btn btn-danger button-card';
+                }
+                const sum = Array.from(document.querySelectorAll('.total'));
+                let amount = 0;
+                for (let i = 0, count = sum.length; i < count; i++) {
+                    amount += Number(sum[i].textContent?.replace(/[^0-9]/g, ''));
+                }
+                localStorage.setItem('count', sum.length.toString());
+                localStorage.setItem('amount', amount.toString());
+                const totalPrice = document.getElementById('total-price') as HTMLDivElement;
+                totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+                const count = document.getElementById('count') as HTMLDivElement;
+                count.innerText = `${localStorage.getItem('count')}`;
+            });
+
             object.appendChild(add);
+            const counter = document.getElementById('counter') as HTMLDivElement;
 
             const input = document.getElementById('elastic') as HTMLInputElement;
             let val = input?.value.trim().toLowerCase();
@@ -173,7 +240,16 @@ class MainPage extends Page {
                         elem.classList.remove('hide');
                     });
                 }
+                counter.innerText = `${
+                    'Found: ' +
+                    Math.min(
+                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length,
+                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length -
+                            Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
+                    ).toString()
+                }`;
             };
+
             input.oninput = function () {
                 val = input.value;
                 localStorage.setItem('formData', val);
@@ -188,7 +264,7 @@ class MainPage extends Page {
             new Router().setQueryParam('', 'bigGrid');
 
             bigGrid.addEventListener('click', () => {
-                productCol.className = 'col-4';
+                productCol.className = 'col-4 open';
                 smallGrid.classList.remove('active');
                 bigGrid.classList.add('active');
                 localStorage.setItem('style', productCol.className);
@@ -200,12 +276,12 @@ class MainPage extends Page {
             });
 
             smallGrid.addEventListener('click', () => {
-                productCol.className = 'col-2';
+                productCol.className = 'col-2 open';
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
                 localStorage.setItem('style', productCol.className);
                 img.style.height = '100px';
-                p.style.display = 'none';
+                p.style.fontSize = '0.1px';
                 h5.style.fontSize = '14px';
                 new Router().setQueryParam('', 'smallGrid');
                 searcher();
@@ -214,15 +290,16 @@ class MainPage extends Page {
             if (localStorage.getItem('style') === 'col-2') {
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
-                productCol.className = 'col-2';
+                productCol.className = 'col-2 open';
                 img.style.height = '100px';
-                p.style.display = 'none';
+                p.style.fontSize = '0.1px';
                 h5.style.fontSize = '14px';
                 searcher();
             } else {
-                productCol.className = 'col-4';
+                productCol.className = 'col-4 open';
                 img.style.height = '200px';
                 p.style.display = 'block';
+                p.style.fontSize = '1rem';
                 h5.style.fontSize = '1.25rem';
                 searcher();
             }

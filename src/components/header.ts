@@ -12,23 +12,42 @@ const Buttons = [
 ];
 
 class Header extends Component {
+    pageButtons: HTMLDivElement;
     constructor(tagName: string, className: string) {
         super(tagName, className);
     }
 
     renderPageButtons() {
-        const pageButtons = document.createElement('div');
+        this.pageButtons = document.createElement('div');
         Buttons.forEach((button) => {
             const buttonHTML = document.createElement('a');
             buttonHTML.href = `#${button.id}`;
             buttonHTML.innerText = button.text;
-            pageButtons.append(buttonHTML);
+            buttonHTML.className = 'header-buttons';
+            this.pageButtons.append(buttonHTML);
         });
-        this.container.append(pageButtons);
+        this.container.append(this.pageButtons);
     }
 
     render() {
         this.renderPageButtons();
+        const totalPrice = document.createElement('div');
+        totalPrice.id = 'total-price';
+        if (localStorage.getItem('amount') === null) {
+            totalPrice.innerText = `${'Total price: ' + '0' + ' $'}`;
+        } else {
+            totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
+        }
+        // const header = document.querySelector('header>*') as HTMLDivElement;
+        const header = this.pageButtons;
+        const firstChild = header.querySelectorAll('a')[1] as HTMLElement;
+        header.insertBefore(totalPrice, firstChild);
+
+        const count = document.createElement('div');
+        count.innerText = localStorage.getItem('count') ?? '0';
+
+        count.id = 'count';
+        firstChild.appendChild(count);
         return this.container;
     }
 }

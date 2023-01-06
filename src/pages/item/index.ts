@@ -27,6 +27,7 @@ class ItemPage extends Page {
             for (const product of products) {
                 if (product.id === Number(this.productId)) {
                     this.currentProduct = product;
+                    localStorage.getItem(this.productId);
                 }
             }
         }
@@ -141,17 +142,46 @@ class ItemPage extends Page {
 
         const price = document.createElement('div');
         price.className = 'price';
-        price.textContent = '€' + this.currentProduct.price.toString();
+        price.textContent = 'Price: ' + this.currentProduct.price.toString() + ' $';
 
         const addToCard = document.createElement('button');
         addToCard.className = 'btn btn-primary';
         addToCard.textContent = 'Add to card';
-        addToCard.addEventListener('click', () => {
-            if (addToCard.textContent === 'Add to card') {
-                addToCard.textContent = 'Drop from cart';
-            } else if (addToCard.textContent === 'Drop from cart') {
+        if (localStorage.getItem(this.productId)) {
+            price.classList.add('total');
+            addToCard.className = 'btn btn-danger';
+            addToCard.textContent = 'Drop from basket';
+        } else {
+            addToCard.className = 'btn btn-primary';
+            addToCard.textContent = 'Add to basket';
+        }
+        addToCard.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (localStorage.getItem(this.productId)) {
+                localStorage.removeItem(this.productId);
                 addToCard.textContent = 'Add to card';
+                addToCard.className = 'btn btn-primary';
+                if (localStorage.getItem('amount')) {
+                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) - this.currentProduct.price);
+                    localStorage.setItem('amount', newTotal.toString());
+                    const newCount = Math.abs(Number(localStorage.getItem('count')) - 1);
+                    localStorage.setItem('count', newCount.toString());
+                }
+            } else {
+                localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
+                addToCard.textContent = 'Drop from cart';
+                addToCard.className = 'btn btn-danger';
+                if (localStorage.getItem('amount')) {
+                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+                    localStorage.setItem('amount', newTotal.toString());
+                    const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                    localStorage.setItem('count', newCount.toString());
+                }
             }
+            const totalPrice = document.getElementById('total-price') as HTMLDivElement;
+            totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+            const count = document.getElementById('count') as HTMLDivElement;
+            count.innerText = `${localStorage.getItem('count')}`;
         });
 
         const buyNow = document.createElement('button');

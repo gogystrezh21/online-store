@@ -1,0 +1,29 @@
+.photo-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(210, 210, 210);
+  margin: 10px 0;
+  box-sizing: content-box;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.description-block {
+  border: 1px solid rgb(210, 210, 210);
+  margin: 0 0 10px 0;
+  box-sizing: content-box;
+  padding: 5px;
+}
+
+.price {
+  font-size: 2rem;
+}
+
+.col-8 img {
+  width: 100%;
+}
+
+.col-3 button {
+  margin-right: 1rem;
+}

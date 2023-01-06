@@ -1,0 +1,7 @@
+.info {
+  display: flex;
+}
+
+.card-text, .card-title {
+  color: black;
+}

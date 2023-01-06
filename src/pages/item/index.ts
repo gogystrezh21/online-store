@@ -1,6 +1,7 @@
 import Page from '../../components/templates/page';
 import { Loader, Model } from '../../model/model';
 import { IProduct } from '../../types';
+import './index.css';
 
 class ItemPage extends Page {
     static TextObject = {
@@ -26,6 +27,7 @@ class ItemPage extends Page {
             for (const product of products) {
                 if (product.id === Number(this.productId)) {
                     this.currentProduct = product;
+                    localStorage.getItem(this.productId);
                 }
             }
         }
@@ -54,7 +56,9 @@ class ItemPage extends Page {
 
             const a = document.createElement('a');
             a.textContent = obj.text.toUpperCase();
-            a.href = obj.link;
+            if (obj.link !== '') {
+                a.href = obj.link;
+            }
             li.append(a);
             ol.append(li);
         }
@@ -81,17 +85,22 @@ class ItemPage extends Page {
         for (const url of this.currentProduct.images) {
             const li = document.createElement('li');
             const img = document.createElement('img');
-            li.style.height = '100px';
-            li.style.width = '100px';
-            img.style.maxHeight = '100px';
-            img.style.maxWidth = '100px';
+            li.className = 'photo-list';
+            li.style.height = '80px';
+            li.style.width = '80px';
+            img.style.maxHeight = '80px';
+            img.style.maxWidth = '80px';
+            img.style.pointerEvents = 'none';
             img.src = url;
             img.alt = 'Slide';
-            img.addEventListener('click', (event) => {
+            li.addEventListener('click', (event) => {
                 currentImg.innerHTML = '';
                 const img = document.createElement('img');
-                const target = event.target as HTMLImageElement;
-                img.src = target.src;
+                const target = event.target as HTMLLIElement;
+                const newImg = target.querySelector('img');
+                if (newImg !== null) {
+                    img.src = newImg.src;
+                }
                 img.alt = 'Slide';
                 img.style.maxHeight = '500px';
                 img.style.maxWidth = '500px';
@@ -107,16 +116,22 @@ class ItemPage extends Page {
         aboutProduct.className = 'col-3';
 
         const description = document.createElement('div');
+        description.className = 'description-block';
         description.textContent = 'Description: ' + this.currentProduct.description;
         const discountPercentage = document.createElement('div');
+        discountPercentage.className = 'description-block';
         discountPercentage.textContent = 'Discount Percentage: ' + this.currentProduct.discountPercentage.toString();
         const rating = document.createElement('div');
+        rating.className = 'description-block';
         rating.textContent = 'Rating: ' + this.currentProduct.rating.toString() + '☆';
         const stock = document.createElement('div');
+        stock.className = 'description-block';
         stock.textContent = 'Stock: ' + this.currentProduct.stock.toString();
         const brand = document.createElement('div');
+        brand.className = 'description-block';
         brand.textContent = 'Brand: ' + this.currentProduct.brand;
         const category = document.createElement('div');
+        category.className = 'description-block';
         category.textContent = 'Category: ' + this.currentProduct.category;
 
         aboutProduct.append(description, discountPercentage, rating, stock, brand, category);
@@ -125,17 +140,47 @@ class ItemPage extends Page {
         buttons.className = 'col-3';
 
         const price = document.createElement('div');
-        price.textContent = '€' + this.currentProduct.price.toString();
+        price.className = 'price';
+        price.textContent = 'Price: ' + this.currentProduct.price.toString() + ' $';
 
         const addToCard = document.createElement('button');
         addToCard.className = 'btn btn-primary';
         addToCard.textContent = 'Add to card';
-        addToCard.addEventListener('click', () => {
-            if (addToCard.textContent === 'Add to card') {
-                addToCard.textContent = 'Drop from cart';
-            } else if (addToCard.textContent === 'Drop from cart') {
+        if (localStorage.getItem(this.productId)) {
+            price.classList.add('total');
+            addToCard.className = 'btn btn-danger';
+            addToCard.textContent = 'Drop from basket';
+        } else {
+            addToCard.className = 'btn btn-primary';
+            addToCard.textContent = 'Add to basket';
+        }
+        addToCard.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (localStorage.getItem(this.productId)) {
+                localStorage.removeItem(this.productId);
                 addToCard.textContent = 'Add to card';
+                addToCard.className = 'btn btn-primary';
+                if (localStorage.getItem('amount')) {
+                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) - this.currentProduct.price);
+                    localStorage.setItem('amount', newTotal.toString());
+                    const newCount = Math.abs(Number(localStorage.getItem('count')) - 1);
+                    localStorage.setItem('count', newCount.toString());
+                }
+            } else {
+                localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
+                addToCard.textContent = 'Drop from cart';
+                addToCard.className = 'btn btn-danger';
+                if (localStorage.getItem('amount')) {
+                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+                    localStorage.setItem('amount', newTotal.toString());
+                    const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                    localStorage.setItem('count', newCount.toString());
+                }
             }
+            const totalPrice = document.getElementById('total-price') as HTMLDivElement;
+            totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+            const count = document.getElementById('count') as HTMLDivElement;
+            count.innerText = `${localStorage.getItem('count')}`;
         });
 
         const buyNow = document.createElement('button');

@@ -1,10 +1,11 @@
 import Page from '../../components/templates/page';
-import { Loader, Model } from '../../model/model';
+import { Model } from '../../model/model';
 import { IProduct } from '../../types';
+import './index.css';
 
 class BasketPage extends Page {
     static TextObject = {
-        MainTitle: 'Basket Page',
+        BasketTitle: 'Basket Page',
     };
     productId: string;
     model: Model;
@@ -18,119 +19,80 @@ class BasketPage extends Page {
         this.productContainer;
     }
 
-    getBasketProducts() {
-        console.log('start current product');
-        const products = this.model.data?.products;
-        console.log(this.model.data?.products);
-        if (products !== undefined) {
-            for (const product of products) {
-                if (product.id === Number(this.productId)) {
-                    this.currentProduct = product;
-                }
+    // getBasketProducts() {
+    //     console.log('start current product');
+    //     // const products = this.model.data?.products;
+    // }
+
+    renderProducts(): void {
+        const basketProducts = [];
+        for (const key in localStorage) {
+            if (key.length < 3) {
+                this.currentProduct = JSON.parse(localStorage.getItem(key)!);
+                basketProducts.push(this.currentProduct);
             }
         }
-    }
+        const title = this.createTitle(BasketPage.TextObject.BasketTitle);
+        this.container.append(title);
 
-    renderProduct(): void {
-        this.productContainer = document.createElement('div');
-        this.productContainer.className = 'row';
+        const container = document.createElement('div');
+        container.className = 'container';
+        this.container.append(container);
 
-        const breadcrumb = document.createElement('nav');
-        breadcrumb.ariaLabel = 'breadcrumb';
-        breadcrumb.className = 'col-12';
-        console.log({ ...localStorage });
-        console.log(Object.values({ ...localStorage }));
-        // const text = localStorage.getItem('1');
-        // console.log(JSON.parse(text));
-        console.log(JSON.parse(localStorage.getItem('1')!) as IProduct); //вот этой строкой получаем значение по ключу 1, но нам надо проверить все ключи (1, 2 и тд до 25)
-        // console.log(Array.from({ ...localStorage }));
-        // console.log(Object.fromEntries(Array.from({ ...localStorage })));
+        const containerRow = document.createElement('div');
+        containerRow.className = 'row';
+        container.append(containerRow);
 
-        const breadcrumbArray = [{ text: 'Store', link: '#/main-page' }];
-        const ol = document.createElement('ol');
-        ol.className = 'breadcrumb';
+        const products = document.createElement('div');
+        products.className = 'col-8';
+        containerRow.append(products);
 
-        for (const obj of breadcrumbArray) {
-            const li = document.createElement('li');
-            li.className = 'breadcrumb-item';
+        const summary = document.createElement('div');
+        summary.className = 'col-4';
+        containerRow.append(summary);
 
-            const a = document.createElement('a');
-            a.textContent = obj.text.toUpperCase();
-            a.href = obj.link;
-            li.append(a);
-            ol.append(li);
+        for (const product of basketProducts) {
+            const info = document.createElement('div');
+            info.className = 'info';
+            products.appendChild(info);
+
+            const img = document.createElement('img');
+            img.className = 'card-img-top';
+            img.src = product.thumbnail;
+            img.style.objectFit = 'contain';
+            img.style.height = '200px';
+            info.appendChild(img);
+
+            const textInfo = document.createElement('div');
+            textInfo.className = 'text-info';
+            info.appendChild(textInfo);
+
+            const h5 = document.createElement('h5');
+            h5.className = 'card-title';
+            h5.textContent = product.title;
+            textInfo.appendChild(h5);
+
+            const p = document.createElement('p');
+            p.className = 'card-text';
+            p.textContent = product.description;
+            textInfo.appendChild(p);
+            // const productCol = document.createElement('div');
+            // // productCol.className = 'col-4';
+            // products.appendChild(productCol);
         }
-
-        breadcrumb.append(ol);
-
-        const photos = document.createElement('div');
-        photos.className = 'col-6';
-
-        const photosContainer = document.createElement('div');
-        photosContainer.className = 'row';
-
-        photos.append(photosContainer);
-
-        const currentImg = document.createElement('div');
-        currentImg.className = 'col-8';
-        const img = document.createElement('img');
-        img.alt = 'Slide';
-        currentImg.append(img);
-
-        const miniPhotos = document.createElement('ul');
-        miniPhotos.className = 'col-4';
-
-        photosContainer.append(miniPhotos, currentImg);
-
-        const aboutProduct = document.createElement('div');
-        aboutProduct.className = 'col-3';
-
-        const description = document.createElement('div');
-        description.textContent = 'Description: ' + this.currentProduct.description;
-        const discountPercentage = document.createElement('div');
-        discountPercentage.textContent = 'Discount Percentage: ' + this.currentProduct.discountPercentage.toString();
-        const rating = document.createElement('div');
-        rating.textContent = 'Rating: ' + this.currentProduct.rating.toString() + '☆';
-        const stock = document.createElement('div');
-        stock.textContent = 'Stock: ' + this.currentProduct.stock.toString();
-
-        aboutProduct.append(description, discountPercentage, rating, stock);
-
-        const buttons = document.createElement('div');
-        buttons.className = 'col-3';
-
-        const price = document.createElement('div');
-        price.textContent = '€' + this.currentProduct.price.toString();
-
-        const addToCard = document.createElement('button');
-        addToCard.className = 'btn btn-primary';
-        addToCard.textContent = 'Add to card';
-        addToCard.addEventListener('click', () => {
-            if (addToCard.textContent === 'Add to card') {
-                addToCard.textContent = 'Drop from cart';
-            } else if (addToCard.textContent === 'Drop from cart') {
-                addToCard.textContent = 'Add to card';
-            }
-        });
-
-        const buyNow = document.createElement('button');
-        buyNow.className = 'btn btn-success';
-        buyNow.textContent = 'Buy now';
-
-        buttons.append(price, addToCard, buyNow);
-
-        this.productContainer.append(breadcrumb, photos, aboutProduct, buttons);
+        // const productCol = document.createElement('div');
+        // productCol.className = 'col-4';
     }
     load(): void {
-        const loader = new Loader();
-        loader.load().then((data) => {
-            console.log('start loader');
-            this.model.data = data;
-            this.getBasketProducts();
-            this.renderProduct();
-            this.container.append(this.productContainer);
-        });
+        // const loader = new Loader();
+        // loader.load().then((data) => {
+        //     console.log('start loader');
+        //     this.model.data = data;
+        // this.getBasketProducts();
+        this.renderProducts();
+        // this.container.append(this.productContainer);
     }
+
     render() {
         this.load();
         return this.container;

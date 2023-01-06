@@ -16,6 +16,10 @@
     display: none;
 }
 
+/* * {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+} */
+
 .big {
     background-image: url('../src/assets/big.svg');
     background-size: 40px 40px;
@@ -23,6 +27,7 @@
     width: 40px;
     cursor: pointer;
     border-radius: 4px;
+    margin-right: 1rem;
 }
 
 .small {
@@ -101,4 +106,12 @@ li {
     color: black;
     background-color: white;
     border-radius: 20px;
+}
+
+label input {
+    margin: 5px;
+}
+
+label {
+    cursor: pointer;
 }

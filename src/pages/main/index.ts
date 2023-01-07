@@ -240,12 +240,12 @@ class MainPage extends Page {
                         elem.classList.remove('hide');
                     });
                 }
+                const openArray = Array.from(document.querySelectorAll<HTMLElement>('.open')).length;
                 counter.innerText = `${
                     'Found: ' +
                     Math.min(
-                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length,
-                        Array.from(document.querySelectorAll<HTMLElement>('.open')).length -
-                            Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
+                        openArray,
+                        openArray - Array.from(document.querySelectorAll<HTMLElement>('.hide')).length
                     ).toString()
                 }`;
             };

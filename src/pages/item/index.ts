@@ -146,7 +146,8 @@ class ItemPage extends Page {
         const addToCard = document.createElement('button');
         addToCard.className = 'btn btn-primary';
         addToCard.textContent = 'Add to card';
-        if (localStorage.getItem(this.productId)) {
+        const localProductId = localStorage.getItem(this.productId);
+        if (localProductId) {
             price.classList.add('total');
             addToCard.className = 'btn btn-danger';
             addToCard.textContent = 'Drop from basket';
@@ -156,7 +157,7 @@ class ItemPage extends Page {
         }
         addToCard.addEventListener('click', (event) => {
             event.preventDefault();
-            if (localStorage.getItem(this.productId)) {
+            if (localProductId) {
                 localStorage.removeItem(this.productId);
                 addToCard.textContent = 'Add to card';
                 addToCard.className = 'btn btn-primary';

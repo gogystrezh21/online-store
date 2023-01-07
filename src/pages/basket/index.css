@@ -1,7 +1,89 @@
-.info {
+.card.basket {
   display: flex;
+  flex-direction: row;
+  height: 14rem;
+  --bs-card-border-radius: 0;
+  border-top: 0px;
+  align-items: center;
 }
 
-.card-text, .card-title {
+.card-text, .card-title, .card-rating, .card-discount {
   color: black;
+}
+
+.text-info {
+  padding: 1rem;
+}
+
+.card-nav {
+  height: 3rem;
+}
+
+.card-nav {
+  --bs-card-border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.basket:nth-last-child(1) {
+  --bs-card-border-radius: 0 0 0.375rem 0.375rem;
+}
+
+.card-img-top.basket {
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  border-radius: 0.375rem;
+}
+
+.text-product{
+  padding: 0.25rem;
+  margin-left: 1rem;
+}
+
+.num {
+  margin: auto 0.6rem
+}
+
+.products-amount {
+  padding-top: 1rem;
+  margin: 0 auto;
+}
+
+.card-summary {
+  height: 75%;
+  --bs-card-border-radius: 0 0 0.375rem 0.375rem;
+  border-top: 0px;
+}
+
+.form-control.promo {
+  width: 80%;
+  margin: 2rem auto;
+}
+
+.promo {
+  margin: 1rem auto;
+}
+
+.buy {
+  width: 50%;
+  margin: 1rem auto;
+}
+
+.rolling {
+  text-align: center;
+  padding: 0.25rem;
+}
+
+.rolling button {
+  margin-left: 0.5rem;
+}
+
+.added-promos {
+  margin: 0 auto;
+  width: 80%;
+  height: 20%;
+}
+
+.added-text {
+  text-align: center;
+  padding: 0.5rem;
+  height: 50%;
+  border: 0px;
 }

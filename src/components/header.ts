@@ -33,12 +33,12 @@ class Header extends Component {
         this.renderPageButtons();
         const totalPrice = document.createElement('div');
         totalPrice.id = 'total-price';
-        if (localStorage.getItem('amount') === null) {
+        const amount = localStorage.getItem('amount');
+        if (amount === null) {
             totalPrice.innerText = `${'Total price: ' + '0' + ' $'}`;
         } else {
-            totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
+            totalPrice.innerText = `${'Total price: ' + amount + '$'}`;
         }
-        // const header = document.querySelector('header>*') as HTMLDivElement;
         const header = this.pageButtons;
         const firstChild = header.querySelectorAll('a')[1] as HTMLElement;
         header.insertBefore(totalPrice, firstChild);

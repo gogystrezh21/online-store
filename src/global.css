@@ -16,10 +16,6 @@
     display: none;
 }
 
-/* * {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-} */
-
 .big {
     background-image: url('../src/assets/big.svg');
     background-size: 40px 40px;

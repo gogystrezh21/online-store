@@ -4,9 +4,7 @@ import { IProduct } from '../../types';
 import './index.css';
 
 class BasketPage extends Page {
-    static TextObject = {
-        BasketTitle: 'Basket Page',
-    };
+    private title = 'Basket Page';
     productId: string;
     model: Model;
     currentProduct: IProduct;
@@ -32,56 +30,181 @@ class BasketPage extends Page {
                 basketProducts.push(this.currentProduct);
             }
         }
-        const title = this.createTitle(BasketPage.TextObject.BasketTitle);
+        const title = this.createTitle(this.title);
         this.container.append(title);
 
         const container = document.createElement('div');
-        container.className = 'container';
+        container.classList.add('container');
         this.container.append(container);
 
         const containerRow = document.createElement('div');
-        containerRow.className = 'row';
+        containerRow.classList.add('row');
         container.append(containerRow);
 
         const products = document.createElement('div');
-        products.className = 'col-8';
+        products.classList.add('col-8');
         containerRow.append(products);
 
         const summary = document.createElement('div');
-        summary.className = 'col-4';
+        summary.classList.add('col-4');
         containerRow.append(summary);
+
+        const nav = document.createElement('div');
+        nav.classList.add('card', 'card-nav');
+        products.appendChild(nav);
+
+        const navSummary = document.createElement('div');
+        navSummary.classList.add('card', 'card-nav');
+        summary.appendChild(navSummary);
+
+        const textSummary = document.createElement('h2');
+        textSummary.classList.add('text-product');
+        navSummary.appendChild(textSummary);
+        textSummary.textContent = 'Summary';
+
+        const summaryInfo = document.createElement('div');
+        summaryInfo.classList.add('card', 'card-summary');
+        summary.appendChild(summaryInfo);
+
+        const productsText = document.createElement('h2');
+        productsText.classList.add('products-amount');
+        productsText.textContent = `${'Products: ' + localStorage.getItem('count')}`;
+        summaryInfo.appendChild(productsText);
+
+        const totalText = document.createElement('h2');
+        totalText.classList.add('products-amount');
+        totalText.textContent = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+        summaryInfo.appendChild(totalText);
+
+        const totalTextTen = document.createElement('h2');
+        totalTextTen.classList.add('products-amount');
+        const tenDiscount = (Number(localStorage.getItem('amount')) * 0.9).toFixed(2).toString();
+        totalTextTen.textContent = `${'Total: ' + tenDiscount + ' $'}`;
+        summaryInfo.appendChild(totalTextTen);
+        totalTextTen.style.display = 'none';
+
+        const input = document.createElement('input');
+        input.classList.add('form-control', 'promo');
+        input.placeholder = 'Enter promo code';
+        summaryInfo.appendChild(input);
+
+        const addedPromos = document.createElement('div');
+        addedPromos.classList.add('card', 'added-promos');
+        summaryInfo.appendChild(addedPromos);
+        const addedPromosText = document.createElement('h4');
+        addedPromosText.classList.add('card', 'added-text');
+        addedPromosText.textContent = 'Added Promos:';
+        addedPromos.appendChild(addedPromosText);
+        addedPromos.style.display = 'none';
+
+        const rolling = document.createElement('h4');
+        rolling.classList.add('rolling');
+        rolling.textContent = 'Rolling-Scopes -10%';
+        summaryInfo.appendChild(rolling);
+        const rollingInside = document.createElement('h4');
+        rollingInside.classList.add('rolling');
+        rollingInside.textContent = 'Rolling-Scopes -10%';
+        addedPromos.appendChild(rollingInside);
+        rollingInside.style.display = 'none';
+        const addRolling = document.createElement('button');
+        addRolling.classList.add('btn', 'btn-primary', 'btn-sm', 'add-rolling');
+        addRolling.textContent = 'Add';
+        rolling.appendChild(addRolling);
+        const addRollingInside = document.createElement('button');
+        addRollingInside.classList.add('btn', 'btn-primary', 'btn-sm', 'add-rolling-inside');
+        addRollingInside.textContent = 'Drop';
+        rollingInside.appendChild(addRollingInside);
+        rolling.style.display = 'none';
+        addRolling.style.display = 'none';
+
+        const textProduct = document.createElement('h2');
+        textProduct.classList.add('text-product');
+        nav.appendChild(textProduct);
+        textProduct.textContent = 'Products in basket';
+        let forCount = 1;
+        input.oninput = function () {
+            if (input?.value.trim().toLowerCase() === 'rs') {
+                rolling.style.display = 'block';
+                addRolling.style.display = 'inline';
+                addRollingInside.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    addedPromos.style.display = 'none';
+                    addRolling.style.display = 'inline';
+                    addRolling.textContent = 'Add';
+                    totalText.style.textDecoration = 'none';
+                    totalTextTen.style.display = 'none';
+                });
+                if (addedPromos.style.display === 'block') {
+                    addRolling.style.display = 'none';
+                }
+                addRolling.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (addRolling.textContent === 'Add') {
+                        totalText.style.textDecoration = 'line-through';
+                        addedPromos.style.display = 'block';
+                        rollingInside.style.display = 'block';
+                        addRolling.style.display = 'none';
+                        totalTextTen.style.display = 'block';
+                    }
+                });
+            } else {
+                rolling.style.display = 'none';
+                addRolling.style.display = 'none';
+            }
+        };
+
+        const promo = document.createElement('h5');
+        promo.classList.add('promo');
+        promo.textContent = `${'Promo for test: ' + '`JS`, ' + '`RS`'}`;
+        summaryInfo.appendChild(promo);
+        const buy = document.createElement('button');
+        buy.classList.add('btn', 'btn-primary', 'buy');
+        buy.textContent = 'Buy now';
+        summaryInfo.appendChild(buy);
 
         for (const product of basketProducts) {
             const info = document.createElement('div');
-            info.className = 'info';
+            info.classList.add('card', 'basket');
             products.appendChild(info);
 
+            const num = document.createElement('h3');
+            num.classList.add('num');
+            num.textContent = forCount.toString();
+            info.appendChild(num);
+
             const img = document.createElement('img');
-            img.className = 'card-img-top';
+            img.classList.add('card-img-top', 'basket');
             img.src = product.thumbnail;
-            img.style.objectFit = 'contain';
+            img.style.objectFit = 'cover';
             img.style.height = '200px';
+            img.style.width = '200px';
             info.appendChild(img);
 
             const textInfo = document.createElement('div');
-            textInfo.className = 'text-info';
+            textInfo.classList.add('text-info');
             info.appendChild(textInfo);
 
             const h5 = document.createElement('h5');
-            h5.className = 'card-title';
+            h5.classList.add('card-title');
             h5.textContent = product.title;
             textInfo.appendChild(h5);
 
             const p = document.createElement('p');
-            p.className = 'card-text';
+            p.classList.add('card-text');
             p.textContent = product.description;
             textInfo.appendChild(p);
-            // const productCol = document.createElement('div');
-            // // productCol.className = 'col-4';
-            // products.appendChild(productCol);
+
+            const rating = document.createElement('p');
+            rating.classList.add('card-rating');
+            rating.textContent = `${'Rating: ' + product.rating.toString() + ' ☆'}`;
+            textInfo.appendChild(rating);
+
+            const discount = document.createElement('p');
+            discount.classList.add('card-discount');
+            discount.textContent = `${'Discount: ' + product.discountPercentage.toString() + ' %'}`;
+            textInfo.appendChild(discount);
+            forCount++;
         }
-        // const productCol = document.createElement('div');
-        // productCol.className = 'col-4';
     }
     load(): void {
         // const loader = new Loader();

@@ -10,14 +10,6 @@
     min-height: 50px;
 }
 
-.form-control {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    font-size: 24px;
-    color: #635a5a;
-}
-
 input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     pointer-events: all;

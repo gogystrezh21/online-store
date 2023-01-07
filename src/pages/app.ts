@@ -7,6 +7,7 @@ import ErrorPage from './error';
 import { ErrorTypes } from '../types';
 import { Model } from '../model/model';
 import { Router } from './router';
+import '../components/modal-form';
 
 class App {
     private static container: HTMLElement = document.body;

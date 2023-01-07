@@ -1,3 +1,4 @@
+import { Modal } from 'bootstrap';
 import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 import { IProduct } from '../../types';
@@ -23,7 +24,6 @@ class BasketPage extends Page {
     //     console.log('start current product');
     //     // const products = this.model.data?.products;
     // }
-
     renderProducts(): void {
         const basketProducts = [];
         for (const key in localStorage) {
@@ -48,8 +48,19 @@ class BasketPage extends Page {
         containerRow.append(products);
 
         const summary = document.createElement('div');
-        summary.className = 'col-4';
+        summary.className = 'col-2';
         containerRow.append(summary);
+
+        const modalButton = document.createElement('button');
+        modalButton.className = 'col-2';
+        modalButton.classList.add('btn');
+        modalButton.classList.add('btn-primary');
+        modalButton.dataset.bsToggle = 'modal';
+        modalButton.dataset.bsTarget = '#exampleModal';
+        containerRow.append(modalButton);
+
+        const modalElement = document.querySelector('#exampleModal') as Element;
+        new Modal(modalElement);
 
         for (const product of basketProducts) {
             const info = document.createElement('div');

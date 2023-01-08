@@ -187,6 +187,19 @@ class ItemPage extends Page {
         const buyNow = document.createElement('button');
         buyNow.className = 'btn btn-success';
         buyNow.textContent = 'Buy now';
+        buyNow.addEventListener('click', () => {
+            if (localStorage.getItem(this.productId) === null) {
+                localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
+                if (localStorage.getItem('amount')) {
+                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+                    localStorage.setItem('amount', newTotal.toString());
+                    const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                    localStorage.setItem('count', newCount.toString());
+                }
+            }
+            window.location.href = '/#/basket-page?showModal=1';
+            window.location.reload();
+        });
 
         buttons.append(price, addToCard, buyNow);
 

@@ -1,6 +1,8 @@
+import { ModalForm } from '../../components/modal-form';
 import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 import { IProduct } from '../../types';
+import { Router } from '../router';
 import './index.css';
 
 class BasketPage extends Page {
@@ -12,7 +14,7 @@ class BasketPage extends Page {
     currentProduct: IProduct;
     productContainer: HTMLDivElement;
 
-    constructor(id: string) {
+    constructor(id: string, private router: Router, private modalForm: ModalForm) {
         super(id);
         this.model = new Model();
         this.currentProduct;
@@ -55,8 +57,10 @@ class BasketPage extends Page {
         modalButton.classList.add('btn');
         modalButton.classList.add('btn-primary');
         modalButton.id = 'modal-button';
-        modalButton.dataset.bsToggle = 'modal';
-        modalButton.dataset.bsTarget = '#exampleModal';
+        modalButton.addEventListener('click', () => {
+            this.modalForm.show();
+            this.router.setQueryParam('showModal', '1');
+        });
         containerRow.append(modalButton);
 
         if (Number(localStorage.getItem('count')) === 0) {
@@ -108,6 +112,10 @@ class BasketPage extends Page {
     }
 
     render() {
+        if (this.router.getQueryParam('showModal') === '1') {
+            this.modalForm.show();
+        }
+
         this.load();
         return this.container;
     }

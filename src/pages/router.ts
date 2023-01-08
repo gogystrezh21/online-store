@@ -1,9 +1,11 @@
+import { HASH_STARTED_REGEXP, ROOT_URL_REGEXP } from '../constants/regexp';
+
 export class Router {
     private url: URL;
 
     constructor() {
         this.update();
-        if (/^\/?$/.test(this.url.pathname)) {
+        if (ROOT_URL_REGEXP.test(this.url.pathname)) {
             this.url.pathname = '/main-page';
         }
     }
@@ -35,6 +37,9 @@ export class Router {
     }
 
     update() {
-        this.url = new URL(window.location.hash.replace(/^#/, ''), window.location.protocol + window.location.host);
+        this.url = new URL(
+            window.location.hash.replace(HASH_STARTED_REGEXP, ''),
+            window.location.protocol + window.location.host
+        );
     }
 }

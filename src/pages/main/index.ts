@@ -3,6 +3,7 @@ import { CategoryFilter } from '../../components/category-filter';
 import { DoubleSlider } from '../../components/double-slider/double-slider';
 import { Sorter } from '../../components/sorter/sorter';
 import Page from '../../components/templates/page';
+import { NOT_NUMBER_STARTED_REGEXP } from '../../constants/regexp';
 import { Model, Loader } from '../../model/model';
 import { Router } from '../router';
 
@@ -208,7 +209,7 @@ class MainPage extends Page {
                 const sum = Array.from(document.querySelectorAll('.total'));
                 let amount = 0;
                 for (let i = 0, count = sum.length; i < count; i++) {
-                    amount += Number(sum[i].textContent?.replace(/[^0-9]/g, ''));
+                    amount += Number(sum[i].textContent?.replace(NOT_NUMBER_STARTED_REGEXP, ''));
                 }
                 localStorage.setItem('count', sum.length.toString());
                 localStorage.setItem('amount', amount.toString());

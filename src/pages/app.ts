@@ -7,6 +7,7 @@ import ErrorPage from './error';
 import { ErrorTypes } from '../types';
 import { Model } from '../model/model';
 import { Router } from './router';
+import { ITEM_PAGE_REGEXP } from '../constants/regexp';
 
 class App {
     private static container: HTMLElement = document.body;
@@ -27,7 +28,7 @@ class App {
             page = App.createMainPage(idPage, router);
         } else if (idPage === '/basket-page') {
             page = new BasketPage(idPage);
-        } else if ((matches = idPage.match(/^\/item-page\/(\d+)$/)) !== null) {
+        } else if ((matches = idPage.match(ITEM_PAGE_REGEXP)) !== null) {
             console.log(matches);
             const productId = matches[1];
             page = new ItemPage(idPage, productId);

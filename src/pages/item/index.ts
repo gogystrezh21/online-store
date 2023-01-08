@@ -11,6 +11,7 @@ class ItemPage extends Page {
     model: Model;
     currentProduct: IProduct;
     productContainer: HTMLDivElement;
+    currentImg: HTMLDivElement;
 
     constructor(id: string, productId: string) {
         super(id);
@@ -20,7 +21,49 @@ class ItemPage extends Page {
         this.productContainer;
     }
 
-    getCurrentProduct() {
+    private onMinImgClicked(event: Event): void {
+        this.currentImg.innerHTML = '';
+        const img = document.createElement('img');
+        const target = event.target as HTMLLIElement;
+        const newImg = target.querySelector('img');
+        if (newImg !== null) {
+            img.src = newImg.src;
+        }
+        img.alt = 'Slide';
+        img.className = 'current-img';
+        this.currentImg.append(img);
+    }
+
+    private onAddToCardClick(event: Event, button: HTMLButtonElement): void {
+        event.preventDefault();
+        if (localStorage.getItem(this.productId)) {
+            localStorage.removeItem(this.productId);
+            button.textContent = 'Add to card';
+            button.className = 'btn btn-primary';
+            if (localStorage.getItem('amount')) {
+                const newTotal = Math.abs(Number(localStorage.getItem('amount')) - this.currentProduct.price);
+                localStorage.setItem('amount', newTotal.toString());
+                const newCount = Math.abs(Number(localStorage.getItem('count')) - 1);
+                localStorage.setItem('count', newCount.toString());
+            }
+        } else {
+            localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
+            button.textContent = 'Drop from cart';
+            button.className = 'btn btn-danger';
+            if (localStorage.getItem('amount')) {
+                const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+                localStorage.setItem('amount', newTotal.toString());
+                const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                localStorage.setItem('count', newCount.toString());
+            }
+        }
+        const totalPrice = document.getElementById('total-price') as HTMLDivElement;
+        totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+        const count = document.getElementById('count') as HTMLDivElement;
+        count.innerText = `${localStorage.getItem('count')}`;
+    }
+
+    getCurrentProduct(): void {
         console.log('start current product');
         const products = this.model.data?.products;
         if (products !== undefined) {
@@ -33,13 +76,7 @@ class ItemPage extends Page {
         }
     }
 
-    renderProduct(): void {
-        this.productContainer = document.createElement('div');
-        this.productContainer.className = 'container';
-
-        const productRow = document.createElement('div');
-        productRow.className = 'row';
-
+    renderBreadcrumbs(): HTMLElement {
         const breadcrumb = document.createElement('nav');
         breadcrumb.ariaLabel = 'breadcrumb';
         breadcrumb.className = 'col-12';
@@ -51,6 +88,7 @@ class ItemPage extends Page {
             { text: this.currentProduct.brand, link: '' },
             { text: this.currentProduct.title, link: '' },
         ];
+
         const ol = document.createElement('ol');
         ol.className = 'breadcrumb';
 
@@ -66,25 +104,11 @@ class ItemPage extends Page {
             li.append(a);
             ol.append(li);
         }
-
         breadcrumb.append(ol);
+        return breadcrumb;
+    }
 
-        const photos = document.createElement('div');
-        photos.className = 'col-6';
-
-        const photosContainer = document.createElement('div');
-        photosContainer.className = 'row';
-
-        photos.append(photosContainer);
-
-        const currentImg = document.createElement('div');
-        currentImg.className = 'col-8';
-        const img = document.createElement('img');
-        img.src = this.currentProduct.thumbnail;
-        img.alt = 'Slide';
-        img.className = 'current-img';
-        currentImg.append(img);
-
+    renderMiniPhotos(): HTMLUListElement {
         const miniPhotos = document.createElement('ul');
         miniPhotos.className = 'col-4';
         for (const url of this.currentProduct.images) {
@@ -95,48 +119,71 @@ class ItemPage extends Page {
             img.style.pointerEvents = 'none';
             img.src = url;
             img.alt = 'Slide';
-            li.addEventListener('click', (event) => {
-                currentImg.innerHTML = '';
-                const img = document.createElement('img');
-                const target = event.target as HTMLLIElement;
-                const newImg = target.querySelector('img');
-                if (newImg !== null) {
-                    img.src = newImg.src;
-                }
-                img.alt = 'Slide';
-                img.className = 'current-img';
-                currentImg.append(img);
-            });
+            li.addEventListener('click', this.onMinImgClicked.bind(this));
             li.append(img);
             miniPhotos.append(li);
         }
+        return miniPhotos;
+    }
 
-        photosContainer.append(miniPhotos, currentImg);
+    renderPhotos(): HTMLDivElement {
+        const photos = document.createElement('div');
+        photos.className = 'col-6';
 
+        const photosContainer = document.createElement('div');
+        photosContainer.className = 'row';
+        photos.append(photosContainer);
+
+        this.currentImg = document.createElement('div');
+        this.currentImg.className = 'col-8';
+
+        const img = document.createElement('img');
+        img.src = this.currentProduct.thumbnail;
+        img.alt = 'Slide';
+        img.className = 'current-img';
+
+        this.currentImg.append(img);
+
+        const miniPhotos = this.renderMiniPhotos();
+        photosContainer.append(miniPhotos, this.currentImg);
+
+        return photos;
+    }
+
+    renderProductInfo(): HTMLDivElement {
         const aboutProduct = document.createElement('div');
         aboutProduct.className = 'col-3';
 
         const description = document.createElement('div');
         description.className = 'description-block';
         description.textContent = 'Description: ' + this.currentProduct.description;
+
         const discountPercentage = document.createElement('div');
         discountPercentage.className = 'description-block';
         discountPercentage.textContent = 'Discount Percentage: ' + this.currentProduct.discountPercentage.toString();
+
         const rating = document.createElement('div');
         rating.className = 'description-block';
         rating.textContent = 'Rating: ' + this.currentProduct.rating.toString() + '☆';
+
         const stock = document.createElement('div');
         stock.className = 'description-block';
         stock.textContent = 'Stock: ' + this.currentProduct.stock.toString();
+
         const brand = document.createElement('div');
         brand.className = 'description-block';
         brand.textContent = 'Brand: ' + this.currentProduct.brand;
+
         const category = document.createElement('div');
         category.className = 'description-block';
         category.textContent = 'Category: ' + this.currentProduct.category;
 
         aboutProduct.append(description, discountPercentage, rating, stock, brand, category);
 
+        return aboutProduct;
+    }
+
+    renderButtons(): HTMLDivElement {
         const buttons = document.createElement('div');
         buttons.className = 'col-3';
 
@@ -147,6 +194,7 @@ class ItemPage extends Page {
         const addToCard = document.createElement('button');
         addToCard.className = 'btn btn-primary';
         addToCard.textContent = 'Add to card';
+
         if (localStorage.getItem(this.productId)) {
             price.classList.add('total');
             addToCard.className = 'btn btn-danger';
@@ -155,33 +203,9 @@ class ItemPage extends Page {
             addToCard.className = 'btn btn-primary';
             addToCard.textContent = 'Add to basket';
         }
+
         addToCard.addEventListener('click', (event) => {
-            event.preventDefault();
-            if (localStorage.getItem(this.productId)) {
-                localStorage.removeItem(this.productId);
-                addToCard.textContent = 'Add to card';
-                addToCard.className = 'btn btn-primary';
-                if (localStorage.getItem('amount')) {
-                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) - this.currentProduct.price);
-                    localStorage.setItem('amount', newTotal.toString());
-                    const newCount = Math.abs(Number(localStorage.getItem('count')) - 1);
-                    localStorage.setItem('count', newCount.toString());
-                }
-            } else {
-                localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
-                addToCard.textContent = 'Drop from cart';
-                addToCard.className = 'btn btn-danger';
-                if (localStorage.getItem('amount')) {
-                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
-                    localStorage.setItem('amount', newTotal.toString());
-                    const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
-                    localStorage.setItem('count', newCount.toString());
-                }
-            }
-            const totalPrice = document.getElementById('total-price') as HTMLDivElement;
-            totalPrice.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
-            const count = document.getElementById('count') as HTMLDivElement;
-            count.innerText = `${localStorage.getItem('count')}`;
+            this.onAddToCardClick(event, addToCard);
         });
 
         const buyNow = document.createElement('button');
@@ -190,9 +214,25 @@ class ItemPage extends Page {
 
         buttons.append(price, addToCard, buyNow);
 
+        return buttons;
+    }
+
+    renderProduct(): void {
+        this.productContainer = document.createElement('div');
+        this.productContainer.className = 'container';
+
+        const productRow = document.createElement('div');
+        productRow.className = 'row';
+
+        const breadcrumb = this.renderBreadcrumbs();
+        const photos = this.renderPhotos();
+        const aboutProduct = this.renderProductInfo();
+        const buttons = this.renderButtons();
+
         productRow.append(breadcrumb, photos, aboutProduct, buttons);
         this.productContainer.append(productRow);
     }
+
     load(): void {
         const loader = new Loader();
         loader.load().then((data) => {
@@ -203,7 +243,8 @@ class ItemPage extends Page {
             this.container.append(this.productContainer);
         });
     }
-    render() {
+
+    render(): HTMLElement {
         this.load();
         return this.container;
     }

@@ -183,38 +183,38 @@ class ItemPage extends Page {
         return aboutProduct;
     }
 
-    renderButtons(): HTMLDivElement {
-        const buttons = document.createElement('div');
-        buttons.className = 'col-3';
+    renderCard(): HTMLDivElement {
+        const card = document.createElement('div');
+        card.className = 'col-3';
 
         const price = document.createElement('div');
         price.className = 'price';
         price.textContent = 'Price: ' + this.currentProduct.price.toString() + ' $';
 
-        const addToCard = document.createElement('button');
-        addToCard.className = 'btn btn-primary';
-        addToCard.textContent = 'Add to card';
+        const addToCardButton = document.createElement('button');
+        addToCardButton.className = 'btn btn-primary';
+        addToCardButton.textContent = 'Add to card';
 
         if (localStorage.getItem(this.productId)) {
             price.classList.add('total');
-            addToCard.className = 'btn btn-danger';
-            addToCard.textContent = 'Drop from basket';
+            addToCardButton.className = 'btn btn-danger';
+            addToCardButton.textContent = 'Drop from basket';
         } else {
-            addToCard.className = 'btn btn-primary';
-            addToCard.textContent = 'Add to basket';
+            addToCardButton.className = 'btn btn-primary';
+            addToCardButton.textContent = 'Add to basket';
         }
 
-        addToCard.addEventListener('click', (event) => {
-            this.onAddToCardClick(event, addToCard);
+        addToCardButton.addEventListener('click', (event) => {
+            this.onAddToCardClick(event, addToCardButton);
         });
 
         const buyNow = document.createElement('button');
         buyNow.className = 'btn btn-success';
         buyNow.textContent = 'Buy now';
 
-        buttons.append(price, addToCard, buyNow);
+        card.append(price, addToCardButton, buyNow);
 
-        return buttons;
+        return card;
     }
 
     renderProduct(): void {
@@ -227,9 +227,9 @@ class ItemPage extends Page {
         const breadcrumb = this.renderBreadcrumbs();
         const photos = this.renderPhotos();
         const aboutProduct = this.renderProductInfo();
-        const buttons = this.renderButtons();
+        const card = this.renderCard();
 
-        productRow.append(breadcrumb, photos, aboutProduct, buttons);
+        productRow.append(breadcrumb, photos, aboutProduct, card);
         this.productContainer.append(productRow);
     }
 

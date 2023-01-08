@@ -68,7 +68,7 @@ class BasketPage extends Page {
 
         const productsText = document.createElement('h2');
         productsText.classList.add('products-amount');
-        productsText.textContent = `${'Products: ' + localStorage.getItem('count')}`;
+        productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
         summaryInfo.appendChild(productsText);
 
         const totalText = document.createElement('h2');
@@ -183,6 +183,67 @@ class BasketPage extends Page {
             const textInfo = document.createElement('div');
             textInfo.classList.add('text-info');
             info.appendChild(textInfo);
+
+            const stock = document.createElement('div');
+            stock.classList.add('stock');
+            info.appendChild(stock);
+
+            const stockText = document.createElement('h6');
+            stockText.classList.add('stock-text');
+            stockText.textContent = `${'Stock: ' + product.stock}`;
+            stock.appendChild(stockText);
+
+            const stockCount = document.createElement('div');
+            stockCount.classList.add('stock-count');
+            stock.appendChild(stockCount);
+
+            let stockCountNum = 1;
+            const minus = document.createElement('div');
+            minus.classList.add('stock-minus');
+            minus.textContent = '-';
+            stockCount.appendChild(minus);
+
+            const stockSelect = document.createElement('div');
+            stockSelect.classList.add('stock-select');
+            stockSelect.innerText = `${stockCountNum}`;
+            stockCount.appendChild(stockSelect);
+
+            const plus = document.createElement('div');
+            plus.classList.add('stock-plus');
+            plus.textContent = '+';
+            stockCount.appendChild(plus);
+
+            plus.addEventListener('click', (event) => {
+                event.preventDefault();
+                stockCountNum++;
+                stockSelect.innerText = `${stockCountNum}`;
+                const lsPlus = Number(localStorage.getItem('count')) + 1;
+                localStorage.setItem('count', lsPlus.toString());
+                const count = document.getElementById('count') as HTMLDivElement;
+                count.innerText = `${localStorage.getItem('count')}`;
+                productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+                const lsPlusAmount = Number(localStorage.getItem('amount')) + product.price;
+                localStorage.setItem('amount', lsPlusAmount.toString());
+                const amount = document.getElementById('total-price') as HTMLDivElement;
+                amount.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+                totalText.innerText = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+            });
+
+            minus.addEventListener('click', (event) => {
+                event.preventDefault();
+                stockCountNum--;
+                stockSelect.innerText = `${stockCountNum}`;
+                const lsMinus = Number(localStorage.getItem('count')) - 1;
+                localStorage.setItem('count', lsMinus.toString());
+                const count = document.getElementById('count') as HTMLDivElement;
+                count.innerText = `${localStorage.getItem('count')}`;
+                productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+            });
+
+            const stockPrice = document.createElement('h6');
+            stockPrice.classList.add('stock-text');
+            stockPrice.textContent = `${product.price * Number(stockSelect.textContent) + ' $'}`;
+            stock.appendChild(stockPrice);
 
             const h5 = document.createElement('h5');
             h5.classList.add('card-title');

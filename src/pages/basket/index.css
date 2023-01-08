@@ -13,6 +13,7 @@
 
 .text-info {
   padding: 1rem;
+  width: 475px;
 }
 
 .card-nav {
@@ -86,4 +87,34 @@
   padding: 0.5rem;
   height: 50%;
   border: 0px;
+}
+
+.stock {
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  height: 100%;
+  text-align: center;
+  padding-top: 0.5rem;
+  justify-content: space-around;
+}
+
+.stock-plus, .stock-minus {
+  text-decoration: none;
+  border: 1px solid black;
+  height: 2rem;
+  width: 2rem;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 1.1rem;
+}
+
+.stock-count {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.stock-select {
+  font-size: 1.4rem;
 }

@@ -87,30 +87,6 @@ class MainPage extends Page {
         search.append(smallGrid);
         form.append(this.sorter.render());
 
-        // const totalPrice = document.createElement('div');
-        // totalPrice.id = 'total-price';
-        // if (localStorage.getItem('amount') === null) {
-        //     totalPrice.innerText = `${'Total price: ' + '0' + ' $'}`;
-        // } else {
-        //     totalPrice.innerText = `${'Total price: ' + localStorage.getItem('amount') + '$'}`;
-        // }
-        // const header = document.querySelector('header>*') as HTMLDivElement;
-        // const firstChild = document.querySelectorAll('a')[1] as HTMLElement;
-        // header.insertBefore(totalPrice, firstChild);
-
-        // const count = document.createElement('div');
-        // if (localStorage.getItem('count') === null) {
-        //     count.innerText = '0';
-        // } else {
-        //     count.innerText = `${localStorage.getItem('count')}`;
-        // }
-        // count.id = 'count';
-        // firstChild.appendChild(count);
-
-        // this.amountProducts.textContent = '';
-        // this.amountProducts.textContent = this.model.numberProducts.toString();
-        // search.append(this.amountProducts);
-
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
         products.append(this.productsGrid);

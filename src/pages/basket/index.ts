@@ -213,10 +213,16 @@ class BasketPage extends Page {
             plus.textContent = '+';
             stockCount.appendChild(plus);
 
+            const stockPrice = document.createElement('h6');
+            stockPrice.classList.add('stock-text');
+            stockPrice.textContent = `${product.price * Number(stockSelect.textContent) + ' $'}`;
+            stock.appendChild(stockPrice);
+
             plus.addEventListener('click', (event) => {
                 event.preventDefault();
                 stockCountNum++;
                 stockSelect.innerText = `${stockCountNum}`;
+                stockPrice.textContent = `${product.price * Number(stockSelect.textContent) + ' $'}`;
                 const lsPlus = Number(localStorage.getItem('count')) + 1;
                 localStorage.setItem('count', lsPlus.toString());
                 const count = document.getElementById('count') as HTMLDivElement;
@@ -227,23 +233,31 @@ class BasketPage extends Page {
                 const amount = document.getElementById('total-price') as HTMLDivElement;
                 amount.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
                 totalText.innerText = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+                if (Number(stockSelect.innerText) === product.stock) {
+                    plus.style.pointerEvents = 'none';
+                }
             });
 
             minus.addEventListener('click', (event) => {
                 event.preventDefault();
                 stockCountNum--;
                 stockSelect.innerText = `${stockCountNum}`;
+                stockPrice.textContent = `${product.price * Number(stockSelect.textContent) + ' $'}`;
                 const lsMinus = Number(localStorage.getItem('count')) - 1;
                 localStorage.setItem('count', lsMinus.toString());
                 const count = document.getElementById('count') as HTMLDivElement;
                 count.innerText = `${localStorage.getItem('count')}`;
                 productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+                const lsPlusAmount = Number(localStorage.getItem('amount')) - product.price;
+                localStorage.setItem('amount', lsPlusAmount.toString());
+                const amount = document.getElementById('total-price') as HTMLDivElement;
+                amount.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
+                totalText.innerText = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+                if (Number(stockSelect.innerText) === 0) {
+                    const productKey = this.currentProduct.id.toString();
+                    localStorage.removeItem(productKey);
+                }
             });
-
-            const stockPrice = document.createElement('h6');
-            stockPrice.classList.add('stock-text');
-            stockPrice.textContent = `${product.price * Number(stockSelect.textContent) + ' $'}`;
-            stock.appendChild(stockPrice);
 
             const h5 = document.createElement('h5');
             h5.classList.add('card-title');

@@ -35,11 +35,15 @@ class ItemPage extends Page {
 
     renderProduct(): void {
         this.productContainer = document.createElement('div');
-        this.productContainer.className = 'row';
+        this.productContainer.className = 'container';
+
+        const productRow = document.createElement('div');
+        productRow.className = 'row';
 
         const breadcrumb = document.createElement('nav');
         breadcrumb.ariaLabel = 'breadcrumb';
         breadcrumb.className = 'col-12';
+        breadcrumb.classList.add('breadcrumb_product');
 
         const breadcrumbArray = [
             { text: 'Store', link: '#/main-page' },
@@ -78,6 +82,7 @@ class ItemPage extends Page {
         const img = document.createElement('img');
         img.src = this.currentProduct.thumbnail;
         img.alt = 'Slide';
+        img.className = 'current-img';
         currentImg.append(img);
 
         const miniPhotos = document.createElement('ul');
@@ -86,10 +91,7 @@ class ItemPage extends Page {
             const li = document.createElement('li');
             const img = document.createElement('img');
             li.className = 'photo-list';
-            li.style.height = '80px';
-            li.style.width = '80px';
-            img.style.maxHeight = '80px';
-            img.style.maxWidth = '80px';
+            img.className = 'min-img';
             img.style.pointerEvents = 'none';
             img.src = url;
             img.alt = 'Slide';
@@ -102,8 +104,7 @@ class ItemPage extends Page {
                     img.src = newImg.src;
                 }
                 img.alt = 'Slide';
-                img.style.maxHeight = '500px';
-                img.style.maxWidth = '500px';
+                img.className = 'current-img';
                 currentImg.append(img);
             });
             li.append(img);
@@ -146,8 +147,7 @@ class ItemPage extends Page {
         const addToCard = document.createElement('button');
         addToCard.className = 'btn btn-primary';
         addToCard.textContent = 'Add to card';
-        const localProductId = localStorage.getItem(this.productId);
-        if (localProductId) {
+        if (localStorage.getItem(this.productId)) {
             price.classList.add('total');
             addToCard.className = 'btn btn-danger';
             addToCard.textContent = 'Drop from basket';
@@ -157,7 +157,7 @@ class ItemPage extends Page {
         }
         addToCard.addEventListener('click', (event) => {
             event.preventDefault();
-            if (localProductId) {
+            if (localStorage.getItem(this.productId)) {
                 localStorage.removeItem(this.productId);
                 addToCard.textContent = 'Add to card';
                 addToCard.className = 'btn btn-primary';
@@ -190,7 +190,8 @@ class ItemPage extends Page {
 
         buttons.append(price, addToCard, buyNow);
 
-        this.productContainer.append(breadcrumb, photos, aboutProduct, buttons);
+        productRow.append(breadcrumb, photos, aboutProduct, buttons);
+        this.productContainer.append(productRow);
     }
     load(): void {
         const loader = new Loader();

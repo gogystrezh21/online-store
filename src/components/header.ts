@@ -21,7 +21,7 @@ class Header extends Component {
         this.pageButtons = document.createElement('div');
         Buttons.forEach((button) => {
             const buttonHTML = document.createElement('a');
-            buttonHTML.href = `#${button.id}`;
+            buttonHTML.href = `/#${button.id}`;
             buttonHTML.innerText = button.text;
             buttonHTML.className = 'header-buttons';
             this.pageButtons.append(buttonHTML);

@@ -1,4 +1,3 @@
-import { Modal } from 'bootstrap';
 import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 import { IProduct } from '../../types';
@@ -55,12 +54,16 @@ class BasketPage extends Page {
         modalButton.className = 'col-2';
         modalButton.classList.add('btn');
         modalButton.classList.add('btn-primary');
+        modalButton.id = 'modal-button';
         modalButton.dataset.bsToggle = 'modal';
         modalButton.dataset.bsTarget = '#exampleModal';
         containerRow.append(modalButton);
 
-        const modalElement = document.querySelector('#exampleModal') as Element;
-        new Modal(modalElement);
+        if (Number(localStorage.getItem('count')) === 0) {
+            modalButton.style.display = 'none';
+        } else {
+            modalButton.style.display = 'inline-block';
+        }
 
         for (const product of basketProducts) {
             const info = document.createElement('div');

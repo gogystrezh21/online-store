@@ -36,7 +36,8 @@ class ItemPage extends Page {
 
     private onAddToCardClick(event: Event, button: HTMLButtonElement): void {
         event.preventDefault();
-        if (localStorage.getItem(this.productId)) {
+        const product = localStorage.getItem(this.productId);
+        if (product) {
             localStorage.removeItem(this.productId);
             button.textContent = 'Add to card';
             button.className = 'btn btn-primary';

@@ -3,7 +3,6 @@ import Page from '../components/templates/page';
 import BasketPage from './basket';
 import ItemPage from './item';
 import Header from '../components/header';
-// import Footer from '../components/footer';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
 import { Model } from '../model/model';

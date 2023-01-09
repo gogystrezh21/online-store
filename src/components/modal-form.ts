@@ -1,4 +1,13 @@
 import { Modal } from 'bootstrap';
+import {
+    ADDRESS_INPUT_REGEXP,
+    CARD_NUMBER_INPUT_REGEXP,
+    CODE_CARD_INPUT_REGEXP,
+    EMAIL_INPUT_REGEXP,
+    NAME_INPUT_REGEXP,
+    PHONE_INPUT_REGEXP,
+    VALID_THRU_INPUT_REGEXP,
+} from '../constants/regexp';
 
 export class ModalForm {
     private modal: Modal;
@@ -27,17 +36,15 @@ export class ModalForm {
             event.preventDefault();
 
             let isValid = true;
-            isValid = this.setValid(nameInput.value.match(/[a-z]{3,}(\s+[a-z]{3,}){1,}/gi), nameInput) && isValid;
-            isValid = this.setValid(phoneNumber.value.match(/^\+([0-9]){9,}/), phoneNumber) && isValid;
-            const deliveryAddressMatches = deliveryAddress.value.match(/^[a-z]{5,}(\s+[a-z]{5,}){2,}$/gi);
+            isValid = this.setValid(nameInput.value.match(NAME_INPUT_REGEXP), nameInput) && isValid;
+            isValid = this.setValid(phoneNumber.value.match(PHONE_INPUT_REGEXP), phoneNumber) && isValid;
+            const deliveryAddressMatches = deliveryAddress.value.match(ADDRESS_INPUT_REGEXP);
             isValid = this.setValid(deliveryAddressMatches, deliveryAddress) && isValid;
-            const emailMatches = email.value.match(
-                /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/
-            );
+            const emailMatches = email.value.match(EMAIL_INPUT_REGEXP);
             isValid = this.setValid(emailMatches, email) && isValid;
-            isValid = this.setValid(cardNumber.value.match(/^\d{4} \d{4} \d{4} \d{4}$/), cardNumber) && isValid;
-            isValid = this.setValid(validThru.value.match(/^(\d{2})\/?(\d{2})/), validThru) && isValid;
-            isValid = this.setValid(code.value.match(/^[0-9]{3}$/), code) && isValid;
+            isValid = this.setValid(cardNumber.value.match(CARD_NUMBER_INPUT_REGEXP), cardNumber) && isValid;
+            isValid = this.setValid(validThru.value.match(VALID_THRU_INPUT_REGEXP), validThru) && isValid;
+            isValid = this.setValid(code.value.match(CODE_CARD_INPUT_REGEXP), code) && isValid;
 
             if (isValid) {
                 this.modal.hide();
@@ -58,25 +65,22 @@ export class ModalForm {
         });
 
         nameInput.addEventListener('input', () => {
-            this.setValid(nameInput.value.match(/[a-z]{3,}(\s+[a-z]{3,}){1,}/gi), nameInput);
+            this.setValid(nameInput.value.match(NAME_INPUT_REGEXP), nameInput);
         });
 
         phoneNumber.addEventListener('input', () => {
             let value = phoneNumber.value.replace(/[^\d+]/g, '');
             value = value.replace(/.\+/g, (s) => s[0]);
             phoneNumber.value = value;
-            this.setValid(phoneNumber.value.match(/^\+([0-9]){9,}/), phoneNumber);
+            this.setValid(phoneNumber.value.match(PHONE_INPUT_REGEXP), phoneNumber);
         });
 
         deliveryAddress.addEventListener('input', () => {
-            this.setValid(deliveryAddress.value.match(/^[a-z]{5,}(\s+[a-z]{5,}){2,}$/gi), deliveryAddress);
+            this.setValid(deliveryAddress.value.match(ADDRESS_INPUT_REGEXP), deliveryAddress);
         });
 
         email.addEventListener('input', () => {
-            this.setValid(
-                email.value.match(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/),
-                email
-            );
+            this.setValid(email.value.match(EMAIL_INPUT_REGEXP), email);
         });
 
         cardNumber.addEventListener('input', () => {
@@ -100,7 +104,7 @@ export class ModalForm {
                 default:
                     cardImage.src = './assets/card.png';
             }
-            this.setValid(cardNumber.value.match(/^\d{4} \d{4} \d{4} \d{4}$/), cardNumber);
+            this.setValid(cardNumber.value.match(CARD_NUMBER_INPUT_REGEXP), cardNumber);
         });
 
         code.addEventListener('input', () => {
@@ -110,7 +114,7 @@ export class ModalForm {
                 value = m[0];
             }
             code.value = value;
-            this.setValid(code.value.match(/^[0-9]{3}$/), code);
+            this.setValid(code.value.match(CODE_CARD_INPUT_REGEXP), code);
         });
 
         validThru.addEventListener('input', () => {
@@ -127,7 +131,7 @@ export class ModalForm {
 
             validThru.selectionStart = selectionOffset + 1;
             validThru.selectionEnd = validThru.selectionStart;
-            this.setValid(validThru.value.match(/^(\d{2})\/?(\d{2})/), validThru);
+            this.setValid(validThru.value.match(VALID_THRU_INPUT_REGEXP), validThru);
 
             if (m !== null && (Number(m[2]) > 27 || Number(m[2]) < 23)) {
                 validThru.classList.add('is-invalid');

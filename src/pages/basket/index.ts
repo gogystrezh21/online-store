@@ -1,6 +1,8 @@
+import { ModalForm } from '../../components/modal-form';
 import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 import { IProduct } from '../../types';
+import { Router } from '../router';
 import './index.css';
 
 class BasketPage extends Page {
@@ -10,7 +12,7 @@ class BasketPage extends Page {
     currentProduct: IProduct;
     productContainer: HTMLDivElement;
 
-    constructor(id: string) {
+    constructor(id: string, private router: Router, private modalForm: ModalForm) {
         super(id);
         this.model = new Model();
         this.currentProduct;
@@ -21,7 +23,6 @@ class BasketPage extends Page {
     //     console.log('start current product');
     //     // const products = this.model.data?.products;
     // }
-
     renderProducts(): void {
         const basketProducts = [];
         for (const key in localStorage) {
@@ -159,7 +160,19 @@ class BasketPage extends Page {
         const buy = document.createElement('button');
         buy.classList.add('btn', 'btn-primary', 'buy');
         buy.textContent = 'Buy now';
+        buy.id = 'modal-button';
+        buy.addEventListener('click', () => {
+            this.modalForm.show();
+            this.router.setQueryParam('showModal', '1');
+        });
+        if (Number(localStorage.getItem('count')) === 0) {
+            buy.style.display = 'none';
+        } else {
+            buy.style.display = 'inline-block';
+        }
         summaryInfo.appendChild(buy);
+        summary.className = 'col-4';
+        containerRow.append(summary);
 
         for (const product of basketProducts) {
             const info = document.createElement('div');
@@ -289,6 +302,10 @@ class BasketPage extends Page {
     }
 
     render() {
+        if (this.router.getQueryParam('showModal') === '1') {
+            this.modalForm.show();
+        }
+
         this.load();
         return this.container;
     }

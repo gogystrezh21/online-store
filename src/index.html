@@ -6,5 +6,81 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
     </head>
-    <body></body>
+    <body>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="needs-validation" id="modal-form" novalidate>
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Personal details</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <input type="text" class="form-control form-control-sm" id="name" placeholder="Name" required>
+                                <div class="valid-feedback">Correct format</div>
+                                <div class="invalid-feedback">Wrong format</div>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" class="form-control form-control-sm" id="phone-number" placeholder="Phone number" required>
+                                <div class="valid-feedback">Correct format</div>
+                                <div class="invalid-feedback">Wrong format</div>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" class="form-control form-control-sm" id="delivery-address" placeholder="Delivery address" required>
+                                <div class="valid-feedback">Correct format</div>
+                                <div class="invalid-feedback">Wrong format</div>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" class="form-control form-control-sm" id="e-mail" placeholder="E-mail" required>
+                                <div class="valid-feedback">Correct format</div>
+                                <div class="invalid-feedback">Wrong format</div>
+                            </div> 
+                        </div>
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Credit card details</h1>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-2">
+                                <div class="col-8">
+                                    <input type="text" class="form-control form-control-sm" id="card-number" placeholder="Card number" required>
+                                    <div class="valid-feedback">Correct format</div>
+                                    <div class="invalid-feedback">Wrong format</div>
+                                </div>
+                                <div class="col-4">
+                                    <img id="card-image" src="./assets/card.png" alt="card">
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <input type="text" class="form-control form-control-sm" id="valid-thru" placeholder="MM/YY" required>
+                                    <div class="valid-feedback">Correct format</div>
+                                    <div class="invalid-feedback">Wrong format</div>
+                                </div>
+                                <div class="col-6">
+                                    <input type="text" class="form-control form-control-sm" id="code" placeholder="Code" required>
+                                    <div class="valid-feedback">Correct format</div>
+                                    <div class="invalid-feedback">Wrong format</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">CONFIRM</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="mb-2 ms-2">
+                        <span class="result-modal-content">
+                            Order is processed. Go to the main page after 3
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

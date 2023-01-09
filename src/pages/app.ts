@@ -7,15 +7,18 @@ import ErrorPage from './error';
 import { ErrorTypes } from '../types';
 import { Model } from '../model/model';
 import { Router } from './router';
+import '../components/modal-form';
+import { ModalForm } from '../components/modal-form';
 
 class App {
     private static container: HTMLElement = document.body;
     private static defaultPageId = 'current-page';
     private initialPage: MainPage;
+    private modalForm: ModalForm;
     private header: Header;
     private router: Router;
 
-    static renderNewPage(idPage: string, router: Router) {
+    static renderNewPage(idPage: string, router: Router, modalForm: ModalForm): void {
         const currentPageHTML = document.querySelector(`#${App.defaultPageId}`);
         if (currentPageHTML) {
             currentPageHTML.remove();
@@ -26,7 +29,7 @@ class App {
         if (idPage === '/main-page') {
             page = App.createMainPage(idPage, router);
         } else if (idPage === '/basket-page') {
-            page = new BasketPage(idPage);
+            page = new BasketPage(idPage, router, modalForm);
         } else if ((matches = idPage.match(/^\/item-page\/(\d+)$/)) !== null) {
             console.log(matches);
             const productId = matches[1];
@@ -46,11 +49,12 @@ class App {
         console.log('enableRoute');
         window.addEventListener('hashchange', () => {
             this.router.update();
-            App.renderNewPage(this.router.pathname, this.router);
+            App.renderNewPage(this.router.pathname, this.router, this.modalForm);
         });
     }
 
     constructor() {
+        this.modalForm = ModalForm.fromDocument();
         this.router = new Router();
         this.initialPage = App.createMainPage('/main-page', this.router);
         this.header = new Header('header', 'header');
@@ -59,7 +63,7 @@ class App {
     start() {
         console.log('App start');
         App.container.append(this.header.render());
-        App.renderNewPage(this.router.pathname, this.router);
+        App.renderNewPage(this.router.pathname, this.router, this.modalForm);
         this.enableRoute();
     }
 

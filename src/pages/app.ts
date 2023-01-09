@@ -16,7 +16,6 @@ class App {
     private initialPage: MainPage;
     private modalForm: ModalForm;
     private header: Header;
-    // private footer: Footer;
     private router: Router;
 
     static renderNewPage(idPage: string, router: Router, modalForm: ModalForm): void {
@@ -57,15 +56,11 @@ class App {
         this.router = new Router();
         this.initialPage = App.createMainPage('/main-page', this.router);
         this.header = new Header('header', 'header');
-        // this.footer = new Footer('footer', 'footer');
     }
 
     start() {
         App.container.append(this.header.render());
         App.renderNewPage(this.router.pathname, this.router, this.modalForm);
-        // setTimeout(() => {
-        //     App.container.append(this.footer.render());
-        // }, 1000);
         this.enableRoute();
     }
 

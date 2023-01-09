@@ -41,7 +41,7 @@
 }
 
 .active {
-    background-color: #198754;
+    background-color: #6F6777;
 }
 
 li {
@@ -168,6 +168,7 @@ body {
 
 #current-page {
     padding-bottom: 130px;
+    padding-top: 0.5rem;
 }
 
 .footer {
@@ -190,5 +191,28 @@ body {
 
 .header {
     margin-top:-1.5rem;
+    background-color: #C0B9C7;
+}
+
+.btn-success {
+    --bs-btn-bg: #91889B;
+    --bs-btn-border-color:  #91889B;
+    --bs-btn-hover-bg: #6F6777;
+    --bs-btn-hover-border-color: #6F6777;
+}
+.filters {
+    padding-top: 2rem
+}
+
+.form-select:focus, .form-control:focus{
+    border-color: #6F6777;
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem rgba(160, 71, 145, 0.25);
+}
+
+.card.mb-3:hover {
+    box-shadow: 0 0 0 0.15rem rgba(160, 71, 145, 0.25);
+}
+.select option:hover {
     background-color: #C0B9C7;
 }

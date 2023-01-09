@@ -44,7 +44,7 @@ class MainPage extends Page {
         container.append(containerRow);
 
         const filters = document.createElement('div');
-        filters.className = 'col-4';
+        filters.classList.add('col-4', 'filters');
 
         const categoryFilter = document.createElement('div');
         const categoryFilterTitle = document.createElement('span');

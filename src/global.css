@@ -73,6 +73,18 @@ li {
     z-index: 1;
 }
 
+.header-buttons:first-child {
+    position: relative;
+    background-image: url('../src/assets/logo.svg');
+    background-size: 200px 100px;
+    height: 100px;
+    width: 200px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0;
+    z-index: 1;
+}
+
 .form-inline {
     display: flex;
     flex-direction: row;

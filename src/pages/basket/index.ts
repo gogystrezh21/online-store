@@ -32,9 +32,6 @@ class BasketPage extends Page {
             }
         }
 
-        const title = this.createTitle(this.title);
-        this.container.append(title);
-
         const container = document.createElement('div');
         container.classList.add('container');
         this.container.append(container);

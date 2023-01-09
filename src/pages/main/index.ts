@@ -36,8 +36,6 @@ class MainPage extends Page {
 
     render() {
         console.log('start render main-page');
-        const title = this.createTitle(MainPage.TextObject.MainTitle);
-        this.container.append(title);
 
         const container = document.createElement('div');
         container.className = 'container';

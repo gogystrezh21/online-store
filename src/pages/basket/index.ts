@@ -31,6 +31,7 @@ class BasketPage extends Page {
                 basketProducts.push(this.currentProduct);
             }
         }
+
         const title = this.createTitle(this.title);
         this.container.append(title);
 
@@ -165,11 +166,6 @@ class BasketPage extends Page {
             this.modalForm.show();
             this.router.setQueryParam('showModal', '1');
         });
-        if (Number(localStorage.getItem('count')) === 0) {
-            buy.style.display = 'none';
-        } else {
-            buy.style.display = 'inline-block';
-        }
         summaryInfo.appendChild(buy);
         summary.className = 'col-4';
         containerRow.append(summary);

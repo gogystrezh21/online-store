@@ -1,0 +1,6 @@
+const ROOT_URL_REGEXP = /^\/?$/;
+const ITEM_PAGE_REGEXP = /^\/item-page\/(\d+)$/;
+const HASH_STARTED_REGEXP = /^#/;
+const NOT_NUMBER_STARTED_REGEXP = /[^0-9]/g;
+
+export { ROOT_URL_REGEXP, ITEM_PAGE_REGEXP, HASH_STARTED_REGEXP, NOT_NUMBER_STARTED_REGEXP };

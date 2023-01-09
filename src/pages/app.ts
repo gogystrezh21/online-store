@@ -3,6 +3,7 @@ import Page from '../components/templates/page';
 import BasketPage from './basket';
 import ItemPage from './item';
 import Header from '../components/header';
+// import Footer from '../components/footer';
 import ErrorPage from './error';
 import { ErrorTypes } from '../types';
 import { Model } from '../model/model';
@@ -16,6 +17,7 @@ class App {
     private initialPage: MainPage;
     private modalForm: ModalForm;
     private header: Header;
+    // private footer: Footer;
     private router: Router;
 
     static renderNewPage(idPage: string, router: Router, modalForm: ModalForm): void {
@@ -31,7 +33,6 @@ class App {
         } else if (idPage === '/basket-page') {
             page = new BasketPage(idPage, router, modalForm);
         } else if ((matches = idPage.match(ITEM_PAGE_REGEXP)) !== null) {
-            console.log(matches);
             const productId = matches[1];
             page = new ItemPage(idPage, productId);
         } else {
@@ -46,7 +47,6 @@ class App {
     }
 
     private enableRoute() {
-        console.log('enableRoute');
         window.addEventListener('hashchange', () => {
             this.router.update();
             App.renderNewPage(this.router.pathname, this.router, this.modalForm);
@@ -58,17 +58,19 @@ class App {
         this.router = new Router();
         this.initialPage = App.createMainPage('/main-page', this.router);
         this.header = new Header('header', 'header');
+        // this.footer = new Footer('footer', 'footer');
     }
 
     start() {
-        console.log('App start');
         App.container.append(this.header.render());
         App.renderNewPage(this.router.pathname, this.router, this.modalForm);
+        // setTimeout(() => {
+        //     App.container.append(this.footer.render());
+        // }, 1000);
         this.enableRoute();
     }
 
     static createMainPage(id: string, router: Router): MainPage {
-        console.log('create main-page');
         const model = new Model();
         const page = new MainPage(id, model, router);
         return page;

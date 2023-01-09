@@ -11,8 +11,6 @@ export class Sorter {
     }
 
     isSelected(parameter: string): boolean {
-        console.log('start isSelected');
-        console.log(this.model.selectedSort);
         return this.model.selectedSort === parameter;
     }
 

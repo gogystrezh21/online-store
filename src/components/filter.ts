@@ -31,7 +31,6 @@ export abstract class Filter {
     }
 
     renderParameters(): void {
-        console.log('start render parameters');
         for (const checkbox of this.checkboxes) {
             checkbox.parentElement?.remove();
             checkbox.removeEventListener('change', this.onChecked);

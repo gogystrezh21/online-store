@@ -68,7 +68,6 @@ class ItemPage extends Page {
     }
 
     getCurrentProduct(): void {
-        console.log('start current product');
         const products = this.model.data?.products;
         if (products !== undefined) {
             for (const product of products) {
@@ -253,7 +252,6 @@ class ItemPage extends Page {
     load(): void {
         const loader = new Loader();
         loader.load().then((data) => {
-            console.log('start loader');
             this.model.data = data;
             this.getCurrentProduct();
             this.renderProduct();

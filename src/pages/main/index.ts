@@ -35,8 +35,6 @@ class MainPage extends Page {
     }
 
     render() {
-        console.log('start render main-page');
-
         const container = document.createElement('div');
         container.className = 'container';
         this.container.append(container);
@@ -107,13 +105,11 @@ class MainPage extends Page {
         this.productsGrid = document.createElement('div');
         this.productsGrid.className = 'row grid';
         products.append(this.productsGrid);
-        console.log('productsGrid created');
         this.renderProducts();
 
         const loader = new Loader();
 
         loader.load().then((data) => {
-            console.log('start loader');
             this.model.data = data;
             this.model.router = this.router;
         });
@@ -123,10 +119,8 @@ class MainPage extends Page {
 
     renderProducts() {
         if (this.productsGrid) {
-            console.log('productsGrid true');
             this.productsGrid.innerHTML = '';
         }
-        console.log('create products');
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = 'col-4';
@@ -300,7 +294,6 @@ class MainPage extends Page {
     }
 
     rerender() {
-        console.log('start rerender');
         this.renderProducts();
         this.brandFilter.rerender();
         this.categoryFilter.rerender();

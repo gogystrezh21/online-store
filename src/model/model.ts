@@ -32,7 +32,6 @@ export class Model extends EventTarget {
     }
 
     set data(value: IData | null) {
-        console.log('set data');
         this._data = value;
         this.priceModel.range = this._data?.price ?? { min: 0, max: 1 };
         this.stockModel.range = this._data?.stock ?? { min: 0, max: 1 };
@@ -56,7 +55,6 @@ export class Model extends EventTarget {
     }
 
     get numberProducts(): number {
-        console.log(this._filteredProducts.length);
         return this._numberProducts;
     }
 
@@ -87,7 +85,6 @@ export class Model extends EventTarget {
     }
 
     set selectedSort(value: string) {
-        console.log('selected sort');
         if (this._selectedSort != value) {
             this._selectedSort = value;
         }
@@ -95,7 +92,6 @@ export class Model extends EventTarget {
     }
 
     filter() {
-        console.log('start filter');
         let filtered: IProduct[] = [];
         let current: IProduct[] = this._data?.products ?? [];
         if (this._selectedBrands.length > 0) {
@@ -123,11 +119,9 @@ export class Model extends EventTarget {
         current = this.priceModel.filterByRange(current);
         this._filteredProducts = this.stockModel.filterByRange(current);
         this._numberProducts = this._filteredProducts.length;
-        console.log(this._numberProducts);
     }
 
     sort() {
-        console.log('start sort');
         switch (this._selectedSort) {
             case 'Sort options':
                 break;
@@ -151,7 +145,6 @@ export class Model extends EventTarget {
     }
 
     change() {
-        console.log('change model');
         this.filter();
         this.sort();
 

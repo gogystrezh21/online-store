@@ -19,10 +19,6 @@ class BasketPage extends Page {
         this.productContainer;
     }
 
-    // getBasketProducts() {
-    //     console.log('start current product');
-    //     // const products = this.model.data?.products;
-    // }
     renderProducts(): void {
         const basketProducts = [];
         for (const key in localStorage) {
@@ -120,6 +116,7 @@ class BasketPage extends Page {
         textProduct.classList.add('text-product');
         nav.appendChild(textProduct);
         textProduct.textContent = 'Products in basket';
+
         input.oninput = function () {
             if (input?.value.trim().toLowerCase() === 'rs') {
                 rolling.style.display = 'block';
@@ -151,20 +148,29 @@ class BasketPage extends Page {
             }
         };
 
+        const noProducts = document.createElement('h4');
+        noProducts.classList.add('no-products');
+        nav.append(noProducts);
+        noProducts.textContent = 'Basket is empty!';
+        noProducts.style.display = 'none';
+
         const promo = document.createElement('h5');
         promo.classList.add('promo');
-        promo.textContent = `${'Promo for test: ' + '`JS`, ' + '`RS`'}`;
+        promo.textContent = `${'Promo for test: ' + '`RS`'}`;
         summaryInfo.appendChild(promo);
         const buy = document.createElement('button');
         buy.classList.add('btn', 'btn-primary', 'buy');
         buy.textContent = 'Buy now';
         buy.id = 'modal-button';
+        if (basketProducts.length === 0) {
+            noProducts.style.display = 'block';
+            buy.disabled = true;
+        }
         buy.addEventListener('click', () => {
             this.modalForm.show();
             this.router.setQueryParam('showModal', '1');
         });
         summaryInfo.appendChild(buy);
-        summary.className = 'col-4';
         containerRow.append(summary);
 
         for (const product of basketProducts) {
@@ -256,10 +262,7 @@ class BasketPage extends Page {
                 const productKey = product.id.toString();
                 if (Number(stockSelect.innerText) === 0) {
                     localStorage.removeItem(productKey);
-                    console.log(info);
                     info.remove();
-                    console.log(product.id);
-                    // num.textContent = forCount.toString();
                 }
             });
 
@@ -285,13 +288,7 @@ class BasketPage extends Page {
         }
     }
     load(): void {
-        // const loader = new Loader();
-        // loader.load().then((data) => {
-        //     console.log('start loader');
-        //     this.model.data = data;
-        // this.getBasketProducts();
         this.renderProducts();
-        // this.container.append(this.productContainer);
     }
 
     render() {

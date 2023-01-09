@@ -1,75 +1,73 @@
 .photo-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid rgb(210, 210, 210);
-  margin: 10px 0;
-  box-sizing: content-box;
-  padding: 5px;
-  height: 80px;
-  width: 80px;
-  cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(210, 210, 210);
+    margin: 10px 0;
+    box-sizing: content-box;
+    padding: 5px;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
 }
 
 .description-block {
-  border: 1px solid rgb(210, 210, 210);
-  margin: 10px 0;
-  box-sizing: content-box;
-  padding: 5px;
+    border: 1px solid rgb(210, 210, 210);
+    margin: 10px 0;
+    box-sizing: content-box;
+    padding: 5px;
 }
 
 .price {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 .current-img {
-  max-width: 400px;
-  max-height: 400px;
-  object-fit: contain;
+    max-width: 400px;
+    max-height: 400px;
+    object-fit: contain;
 }
 
 .min-img {
-  max-width: 80px;
-  max-height: 80px;
+    max-width: 80px;
+    max-height: 80px;
 }
 
 .breadcrumb_product {
-  margin-top: 40px;
+    margin-top: 40px;
 }
 
 .col-8 img {
-  width: 100%;
+    width: 100%;
 }
 
 .col-3 button {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 .photo-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid rgb(210, 210, 210);
-  margin: 10px 0;
-  box-sizing: content-box;
-  padding: 5px;
-  height: 80px;
-  width: 80px;
-  cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(210, 210, 210);
+    margin: 10px 0;
+    box-sizing: content-box;
+    padding: 5px;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
 }
 
 .current-img {
-  max-width: 400px;
-  max-height: 500px;
+    max-width: 400px;
+    max-height: 500px;
 }
 
 .min-img {
-  max-width: 80px;
-  max-height: 80px;
+    max-width: 80px;
+    max-height: 80px;
 }
 
 .breadcrumb_product {
-  margin-top: 40px;
+    margin-top: 40px;
 }
-
-

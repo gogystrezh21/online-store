@@ -213,6 +213,11 @@ body {
 .card.mb-3:hover {
     box-shadow: 0 0 0 0.15rem rgba(160, 71, 145, 0.25);
 }
-.select option:hover {
+
+option:hover {
     background-color: #C0B9C7;
+}
+
+span {
+    font-size: 1.5rem;
 }

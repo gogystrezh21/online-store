@@ -4,8 +4,8 @@ import './double-slider.css';
 export class DoubleSlider {
     private fromSlider: HTMLInputElement;
     private toSlider: HTMLInputElement;
-    private sliderColor = '#C6C6C6';
-    private rangeColor = '#25daa5';
+    private sliderColor = '#C0B9C7';
+    private rangeColor = '#6F6777';
     private formValueMin: HTMLDivElement;
     private formValueMax: HTMLDivElement;
     private modelView: RangeModelView;

@@ -121,7 +121,6 @@ class BasketPage extends Page {
         textProduct.classList.add('text-product');
         nav.appendChild(textProduct);
         textProduct.textContent = 'Products in basket';
-        let forCount = 1;
         input.oninput = function () {
             if (input?.value.trim().toLowerCase() === 'rs') {
                 rolling.style.display = 'block';
@@ -166,12 +165,6 @@ class BasketPage extends Page {
             const info = document.createElement('div');
             info.classList.add('card', 'basket');
             products.appendChild(info);
-
-            const num = document.createElement('h3');
-            num.classList.add('num');
-            num.innerText = `${forCount.toString()}`;
-            info.appendChild(num);
-            // console.log(document.querySelectorAll('.num'));
 
             const img = document.createElement('img');
             img.classList.add('card-img-top', 'basket');
@@ -283,7 +276,6 @@ class BasketPage extends Page {
             discount.classList.add('card-discount');
             discount.textContent = `${'Discount: ' + product.discountPercentage.toString() + ' %'}`;
             textInfo.appendChild(discount);
-            forCount++;
         }
     }
     load(): void {

@@ -169,8 +169,9 @@ class BasketPage extends Page {
 
             const num = document.createElement('h3');
             num.classList.add('num');
-            num.textContent = forCount.toString();
+            num.innerText = `${forCount.toString()}`;
             info.appendChild(num);
+            // console.log(document.querySelectorAll('.num'));
 
             const img = document.createElement('img');
             img.classList.add('card-img-top', 'basket');
@@ -253,9 +254,13 @@ class BasketPage extends Page {
                 const amount = document.getElementById('total-price') as HTMLDivElement;
                 amount.innerText = `${'Total cost: ' + localStorage.getItem('amount') + ' $'}`;
                 totalText.innerText = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+                const productKey = product.id.toString();
                 if (Number(stockSelect.innerText) === 0) {
-                    const productKey = this.currentProduct.id.toString();
                     localStorage.removeItem(productKey);
+                    console.log(info);
+                    info.remove();
+                    console.log(product.id);
+                    // num.textContent = forCount.toString();
                 }
             });
 

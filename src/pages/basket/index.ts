@@ -63,12 +63,21 @@ class BasketPage extends Page {
 
         const productsText = document.createElement('h2');
         productsText.classList.add('products-amount');
-        productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+        if (localStorage.getItem('count')) {
+            productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+        } else {
+            productsText.innerText = `${'Products: ' + 0}`;
+        }
         summaryInfo.appendChild(productsText);
 
         const totalText = document.createElement('h2');
         totalText.classList.add('products-amount');
-        totalText.textContent = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+        if (localStorage.getItem('amount')) {
+            totalText.textContent = `${'Total: ' + localStorage.getItem('amount') + ' $'}`;
+        } else {
+            totalText.textContent = `${'Total: ' + 0 + ' $'}`;
+        }
+
         summaryInfo.appendChild(totalText);
 
         const totalTextTen = document.createElement('h2');

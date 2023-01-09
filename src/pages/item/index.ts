@@ -188,7 +188,7 @@ class ItemPage extends Page {
 
     renderCard(): HTMLDivElement {
         const card = document.createElement('div');
-        card.className = 'col-3';
+        card.className = 'col-3 price-block';
 
         const price = document.createElement('div');
         price.className = 'price';

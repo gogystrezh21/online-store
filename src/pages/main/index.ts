@@ -83,7 +83,6 @@ class MainPage extends Page {
 
         const input = document.createElement('input');
         input.className = 'form-control';
-        // input.ariaLabel = 'Default';
         input.id = 'elastic';
         input.placeholder = 'Search product';
         form.append(input);
@@ -123,7 +122,7 @@ class MainPage extends Page {
         }
         for (const product of this.model.filteredProducts) {
             const productCol = document.createElement('div');
-            productCol.className = 'col-4';
+            productCol.className = `${localStorage.getItem('style')}`;
             this.productsGrid.appendChild(productCol);
 
             this.amountProducts.textContent = '';
@@ -134,7 +133,6 @@ class MainPage extends Page {
             const card = document.createElement('a');
             card.className = 'card mb-3';
             card.href = `#${'/item-page/' + productId}`;
-            // card.target = '_blank';
             productCol.appendChild(card);
 
             const img = document.createElement('img');
@@ -274,7 +272,7 @@ class MainPage extends Page {
                 searcher();
             });
 
-            if (localStorage.getItem('style') === 'col-2') {
+            if (localStorage.getItem('style') === 'col-2 open') {
                 smallGrid.classList.add('active');
                 bigGrid.classList.remove('active');
                 productCol.className = 'col-2 open';

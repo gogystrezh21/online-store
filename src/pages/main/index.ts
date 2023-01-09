@@ -49,10 +49,28 @@ class MainPage extends Page {
 
         const filters = document.createElement('div');
         filters.className = 'col-4';
-        filters.append(this.categoryFilter.render());
-        filters.append(this.brandFilter.render());
-        filters.append(this.priceSlider.render());
-        filters.append(this.stockSlider.render());
+
+        const categoryFilter = document.createElement('div');
+        const categoryFilterTitle = document.createElement('span');
+        categoryFilterTitle.textContent = 'Categories:';
+        categoryFilter.append(categoryFilterTitle, this.categoryFilter.render());
+
+        const brandFilter = document.createElement('div');
+        const brandFilterTitle = document.createElement('span');
+        brandFilterTitle.textContent = 'Brands:';
+        categoryFilter.append(brandFilterTitle, this.brandFilter.render());
+
+        const priceSlider = document.createElement('div');
+        const priceSliderTitle = document.createElement('span');
+        priceSliderTitle.textContent = 'Price:';
+        priceSlider.append(priceSliderTitle, this.priceSlider.render());
+
+        const stockSlider = document.createElement('div');
+        const stockSliderTitle = document.createElement('span');
+        stockSliderTitle.textContent = 'Stock:';
+        stockSlider.append(stockSliderTitle, this.stockSlider.render());
+
+        filters.append(categoryFilter, brandFilter, priceSlider, stockSlider);
         containerRow.append(filters);
 
         const products = document.createElement('div');

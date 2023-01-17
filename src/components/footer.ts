@@ -1,4 +1,5 @@
 import Component from './templates/components';
+import { GitHubLinks } from '../types/index';
 import '../assets/rs_school_js.svg';
 
 class Footer extends Component {
@@ -14,11 +15,11 @@ class Footer extends Component {
         this.container.append(footer);
         const linkVlada = document.createElement('a');
         linkVlada.classList.add('github');
-        linkVlada.textContent = 'vladislava96';
+        linkVlada.textContent = GitHubLinks.vlada;
         linkVlada.href = 'https://github.com/vladislava96';
         const linkGeorge = document.createElement('a');
         linkGeorge.classList.add('github');
-        linkGeorge.textContent = 'gogystrezh21';
+        linkGeorge.textContent = GitHubLinks.george;
         linkGeorge.href = 'https://github.com/gogystrezh21';
         const year = document.createElement('p');
         year.textContent = '2023';

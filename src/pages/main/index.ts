@@ -5,6 +5,7 @@ import { Sorter } from '../../components/sorter/sorter';
 import Page from '../../components/templates/page';
 import { NOT_NUMBER_STARTED_REGEXP } from '../../constants/regexp';
 import { Model, Loader } from '../../model/model';
+import { ItemText, MainText } from '../../types';
 import { Router } from '../router';
 
 class MainPage extends Page {
@@ -12,35 +13,35 @@ class MainPage extends Page {
         MainTitle: 'Main Page',
     };
 
-    private model: Model;
-    private categoryFilter: CategoryFilter;
-    private brandFilter: BrandFilter;
-    private priceSlider: RangeSlider;
-    private stockSlider: RangeSlider;
-    private productsGrid: HTMLDivElement;
-    private router: Router;
-    private sorter: Sorter;
-    private amountProducts: HTMLDivElement = document.createElement('div');
+    private _model: Model;
+    private _categoryFilter: CategoryFilter;
+    private _brandFilter: BrandFilter;
+    private _priceSlider: RangeSlider;
+    private _stockSlider: RangeSlider;
+    private _productsGrid: HTMLDivElement;
+    private _router: Router;
+    private _sorter: Sorter;
+    private _amountProducts: HTMLDivElement = document.createElement('div');
 
     constructor(id: string, model: Model, router: Router) {
         super(id);
-        this.model = model;
-        this.router = router;
-        this.categoryFilter = new CategoryFilter(model);
-        this.brandFilter = new BrandFilter(model);
-        this.model.addEventListener('change', this.rerender.bind(this));
-        this.priceSlider = new RangeSlider(model.priceModel);
-        this.stockSlider = new RangeSlider(model.stockModel);
-        this.sorter = new Sorter(model);
+        this._model = model;
+        this._router = router;
+        this._categoryFilter = new CategoryFilter(model);
+        this._brandFilter = new BrandFilter(model);
+        this._model.addEventListener('change', this.rerender.bind(this));
+        this._priceSlider = new RangeSlider(model.priceModel);
+        this._stockSlider = new RangeSlider(model.stockModel);
+        this._sorter = new Sorter(model);
     }
 
     render() {
         const container = document.createElement('div');
-        container.className = 'container';
+        container.classList.add('container');
         this.container.append(container);
 
         const containerRow = document.createElement('div');
-        containerRow.className = 'row';
+        containerRow.classList.add('row');
         container.append(containerRow);
 
         const filters = document.createElement('div');
@@ -48,41 +49,41 @@ class MainPage extends Page {
 
         const categoryFilter = document.createElement('div');
         const categoryFilterTitle = document.createElement('span');
-        categoryFilterTitle.textContent = 'Categories:';
-        categoryFilter.append(categoryFilterTitle, this.categoryFilter.render());
+        categoryFilterTitle.textContent = MainText.categoriesText;
+        categoryFilter.append(categoryFilterTitle, this._categoryFilter.render());
 
         const brandFilter = document.createElement('div');
         const brandFilterTitle = document.createElement('span');
-        brandFilterTitle.textContent = 'Brands:';
-        categoryFilter.append(brandFilterTitle, this.brandFilter.render());
+        brandFilterTitle.textContent = MainText.brandText;
+        categoryFilter.append(brandFilterTitle, this._brandFilter.render());
 
         const priceSlider = document.createElement('div');
         const priceSliderTitle = document.createElement('span');
-        priceSliderTitle.textContent = 'Price:';
-        priceSlider.append(priceSliderTitle, this.priceSlider.render());
+        priceSliderTitle.textContent = MainText.priceText;
+        priceSlider.append(priceSliderTitle, this._priceSlider.render());
 
         const stockSlider = document.createElement('div');
         const stockSliderTitle = document.createElement('span');
-        stockSliderTitle.textContent = 'Stock:';
-        stockSlider.append(stockSliderTitle, this.stockSlider.render());
+        stockSliderTitle.textContent = MainText.stockPrice;
+        stockSlider.append(stockSliderTitle, this._stockSlider.render());
 
         filters.append(categoryFilter, brandFilter, priceSlider, stockSlider);
         containerRow.append(filters);
 
         const products = document.createElement('div');
-        products.className = 'col-8';
+        products.classList.add('col-8');
         containerRow.append(products);
 
         const search = document.createElement('nav');
-        search.className = 'navbar navbar-light bg-light';
+        search.classList.add('navbar', 'navbar-light', 'bg-light');
         products.append(search);
 
         const form = document.createElement('form');
-        form.className = 'form-inline';
+        form.classList.add('form-inline');
         search.append(form);
 
         const input = document.createElement('input');
-        input.className = 'form-control';
+        input.classList.add('form-control');
         input.id = 'elastic';
         input.placeholder = 'Search product';
         form.append(input);
@@ -92,72 +93,72 @@ class MainPage extends Page {
         search.append(counter);
 
         const bigGrid = document.createElement('div');
-        bigGrid.className = 'big active';
+        bigGrid.classList.add('big', 'active');
         bigGrid.id = 'big';
         search.append(bigGrid);
         const smallGrid = document.createElement('div');
-        smallGrid.className = 'small';
+        smallGrid.classList.add('small');
         smallGrid.id = 'small';
         search.append(smallGrid);
-        form.append(this.sorter.render());
+        form.append(this._sorter.render());
 
-        this.productsGrid = document.createElement('div');
-        this.productsGrid.className = 'row grid';
-        products.append(this.productsGrid);
+        this._productsGrid = document.createElement('div');
+        this._productsGrid.classList.add('row', 'grid');
+        products.append(this._productsGrid);
         this.renderProducts();
 
         const loader = new Loader();
 
         loader.load().then((data) => {
-            this.model.data = data;
-            this.model.router = this.router;
+            this._model.data = data;
+            this._model.router = this._router;
         });
 
         return this.container;
     }
 
     renderProducts() {
-        if (this.productsGrid) {
-            this.productsGrid.innerHTML = '';
+        if (this._productsGrid) {
+            this._productsGrid.innerHTML = '';
         }
-        for (const product of this.model.filteredProducts) {
+        for (const product of this._model.filteredProducts) {
             const productCol = document.createElement('div');
             productCol.className = `${localStorage.getItem('style')}`;
-            this.productsGrid.appendChild(productCol);
+            this._productsGrid.appendChild(productCol);
 
-            this.amountProducts.textContent = '';
-            this.amountProducts.textContent = this.model.numberProducts.toString();
+            this._amountProducts.textContent = '';
+            this._amountProducts.textContent = this._model.numberProducts.toString();
 
             const productId = product.id;
 
             const card = document.createElement('a');
-            card.className = 'card mb-3';
+            card.classList.add('card', 'mb-3');
             card.href = `#${'/item-page/' + productId}`;
             productCol.appendChild(card);
 
             const img = document.createElement('img');
-            img.className = 'card-img-top';
+            img.classList.add('card-img-top');
             img.src = product.thumbnail;
             img.style.objectFit = 'contain';
             img.style.height = '200px';
             card.appendChild(img);
 
             const cardBody = document.createElement('div');
-            cardBody.className = 'card-body';
+            cardBody.classList.add('card-body');
             card.appendChild(cardBody);
 
             const h5 = document.createElement('h5');
-            h5.className = 'card-title';
+            h5.classList.add('card-title');
             h5.textContent = product.title;
             cardBody.appendChild(h5);
 
             const p = document.createElement('p');
-            p.className = 'card-text';
+            p.classList.add('card-text');
             p.textContent = product.description;
             cardBody.appendChild(p);
 
             const price = document.createElement('p');
-            price.className = 'price-text';
+            price.classList.add('price-text');
             price.textContent = 'Price: ' + product.price.toString() + ' $';
             cardBody.appendChild(price);
 
@@ -169,11 +170,11 @@ class MainPage extends Page {
             if (localStorage.getItem(productIdString)) {
                 card.classList.add('select');
                 price.classList.add('total');
-                add.className = 'btn btn-danger button-card';
-                add.textContent = 'Drop from basket';
+                add.classList.add('btn', 'btn-danger', 'button-card');
+                add.textContent = ItemText.dropFromCardText;
             } else {
-                add.className = 'btn btn-success button-card';
-                add.textContent = 'Add to basket';
+                add.classList.add('btn', 'btn-success', 'button-card');
+                add.textContent = ItemText.addToCardText;
             }
             add.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -181,13 +182,13 @@ class MainPage extends Page {
                     localStorage.removeItem(productIdString);
                     card.classList.remove('select');
                     price.classList.remove('total');
-                    add.innerText = 'Add to basket';
-                    add.className = 'btn btn-success button-card';
+                    add.innerText = ItemText.addToCardText;
+                    add.classList.add('btn', 'btn-success', 'button-card');
                 } else {
                     localStorage.setItem(productIdString, JSON.stringify(product));
                     card.classList.add('select');
                     price.classList.add('total');
-                    add.innerText = 'Drop from basket';
+                    add.innerText = ItemText.dropFromCardText;
                     add.className = 'btn btn-danger button-card';
                 }
                 const sum = Array.from(document.querySelectorAll('.total'));
@@ -212,9 +213,9 @@ class MainPage extends Page {
             const bigGrid = document.getElementById('big') as HTMLDivElement;
             const elasticItems = document.querySelectorAll<HTMLElement>('.row.grid>*');
             const searcher = () => {
-                if (val != '') {
+                if (val !== '') {
                     elasticItems.forEach(function (elem) {
-                        if (elem.innerText.toLowerCase().search(val.toLowerCase()) == -1) {
+                        if (elem.innerText.toLowerCase().search(val.toLowerCase()) === -1) {
                             elem.classList.add('hide');
                         } else {
                             elem.classList.remove('hide');
@@ -293,11 +294,11 @@ class MainPage extends Page {
 
     rerender() {
         this.renderProducts();
-        this.brandFilter.renderParameters();
-        this.categoryFilter.renderParameters();
-        this.priceSlider.rerender();
-        this.stockSlider.rerender();
-        this.sorter.rerender();
+        this._brandFilter.renderParameters();
+        this._categoryFilter.renderParameters();
+        this._priceSlider.rerender();
+        this._stockSlider.rerender();
+        this._sorter.rerender();
     }
 }
 

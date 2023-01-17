@@ -25,8 +25,8 @@ import {
 import { FirstNumber } from '../types';
 
 export class ModalForm {
-    private modal: Modal;
-    private resultModal: Modal;
+    private _modal: Modal;
+    private _resultModal: Modal;
 
     public constructor(
         modalForm: HTMLFormElement,
@@ -41,8 +41,8 @@ export class ModalForm {
         modal: HTMLDivElement,
         resultModal: HTMLDivElement
     ) {
-        this.modal = new Modal(modal);
-        this.resultModal = new Modal(resultModal, {
+        this._modal = new Modal(modal);
+        this._resultModal = new Modal(resultModal, {
             backdrop: 'static',
             keyboard: false,
         });
@@ -63,9 +63,9 @@ export class ModalForm {
 
             if (!isValid) return;
 
-            this.modal.hide();
+            this._modal.hide();
             localStorage.clear();
-            this.resultModal.show();
+            this._resultModal.show();
             const content = document.querySelector('.result-modal-content') as Element;
             let time = 3;
             setInterval(() => {
@@ -73,7 +73,7 @@ export class ModalForm {
                 content.textContent = `Order is processed. Go to the main page after ${time}`;
             }, 1000);
             setTimeout(() => {
-                this.resultModal.hide();
+                this._resultModal.hide();
                 window.location.href = '/#/main-page';
                 window.location.reload();
             }, 3000);
@@ -164,7 +164,7 @@ export class ModalForm {
     }
 
     public show(): void {
-        this.modal.show();
+        this._modal.show();
     }
 
     private setValid(matchesOrIsValid: RegExpMatchArray | boolean | null, element: HTMLInputElement): boolean {

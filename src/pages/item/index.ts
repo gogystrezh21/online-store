@@ -1,6 +1,6 @@
 import Page from '../../components/templates/page';
 import { Loader, Model } from '../../model/model';
-import { IProduct } from '../../types';
+import { BasketText, IProduct, ItemText } from '../../types';
 import './index.css';
 
 class ItemPage extends Page {
@@ -37,24 +37,26 @@ class ItemPage extends Page {
     private onAddToCardClick(event: Event, button: HTMLButtonElement): void {
         event.preventDefault();
         const product = localStorage.getItem(this.productId);
+        const amountValue = localStorage.getItem('amount');
+        const countValue = localStorage.getItem('count');
         if (product) {
             localStorage.removeItem(this.productId);
-            button.textContent = 'Add to card';
+            button.textContent = ItemText.addToCardText;
             button.className = 'btn btn-primary';
-            if (localStorage.getItem('amount')) {
-                const newTotal = Math.abs(Number(localStorage.getItem('amount')) - this.currentProduct.price);
+            if (amountValue) {
+                const newTotal = Math.abs(Number(amountValue) - this.currentProduct.price);
                 localStorage.setItem('amount', newTotal.toString());
-                const newCount = Math.abs(Number(localStorage.getItem('count')) - 1);
+                const newCount = Math.abs(Number(countValue) - 1);
                 localStorage.setItem('count', newCount.toString());
             }
         } else {
             localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
-            button.textContent = 'Drop from cart';
+            button.textContent = ItemText.dropFromCardText;
             button.className = 'btn btn-danger';
-            if (localStorage.getItem('amount')) {
-                const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+            if (amountValue) {
+                const newTotal = Math.abs(Number(amountValue) + this.currentProduct.price);
                 localStorage.setItem('amount', newTotal.toString());
-                const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                const newCount = Math.abs(Number(countValue) + 1);
                 localStorage.setItem('count', newCount.toString());
             } else {
                 localStorage.setItem('amount', this.currentProduct.price.toString());
@@ -196,15 +198,15 @@ class ItemPage extends Page {
 
         const addToCardButton = document.createElement('button');
         addToCardButton.className = 'btn btn-primary';
-        addToCardButton.textContent = 'Add to card';
+        addToCardButton.textContent = ItemText.addToCardText;
 
         if (localStorage.getItem(this.productId)) {
             price.classList.add('total');
             addToCardButton.className = 'btn btn-danger';
-            addToCardButton.textContent = 'Drop from basket';
+            addToCardButton.textContent = ItemText.dropFromCardText;
         } else {
             addToCardButton.className = 'btn btn-primary';
-            addToCardButton.textContent = 'Add to basket';
+            addToCardButton.textContent = ItemText.addToCardText;
         }
 
         addToCardButton.addEventListener('click', (event) => {
@@ -213,14 +215,16 @@ class ItemPage extends Page {
 
         const buyNow = document.createElement('button');
         buyNow.className = 'btn btn-success';
-        buyNow.textContent = 'Buy now';
+        buyNow.textContent = BasketText.buyNow;
         buyNow.addEventListener('click', () => {
+            const amountValue = localStorage.getItem('amount');
+            const countValue = localStorage.getItem('count');
             if (localStorage.getItem(this.productId) === null) {
                 localStorage.setItem(this.productId, JSON.stringify(this.currentProduct));
-                if (localStorage.getItem('amount')) {
-                    const newTotal = Math.abs(Number(localStorage.getItem('amount')) + this.currentProduct.price);
+                if (amountValue) {
+                    const newTotal = Math.abs(Number(amountValue) + this.currentProduct.price);
                     localStorage.setItem('amount', newTotal.toString());
-                    const newCount = Math.abs(Number(localStorage.getItem('count')) + 1);
+                    const newCount = Math.abs(Number(countValue) + 1);
                     localStorage.setItem('count', newCount.toString());
                 }
             }

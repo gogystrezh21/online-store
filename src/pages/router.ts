@@ -1,43 +1,43 @@
 import { HASH_STARTED_REGEXP, ROOT_URL_REGEXP } from '../constants/regexp';
 
 export class Router {
-    private url: URL;
+    private _url: URL;
 
     constructor() {
         this.update();
-        if (ROOT_URL_REGEXP.test(this.url.pathname)) {
-            this.url.pathname = '/main-page';
+        if (ROOT_URL_REGEXP.test(this._url.pathname)) {
+            this._url.pathname = '/main-page';
         }
     }
 
     get pathname(): string {
-        return this.url.pathname;
+        return this._url.pathname;
     }
 
     getQueryParam(key: string): string | null {
-        return this.url.searchParams.get(key);
+        return this._url.searchParams.get(key);
     }
 
     getQueryParams(key: string): string[] {
-        return this.url.searchParams.getAll(key);
+        return this._url.searchParams.getAll(key);
     }
 
     setQueryParam(key: string, value: string | string[]) {
         if (Array.isArray(value)) {
-            this.url.searchParams.delete(key);
+            this._url.searchParams.delete(key);
             for (const item of value) {
-                this.url.searchParams.append(key, item);
+                this._url.searchParams.append(key, item);
             }
         } else {
-            this.url.searchParams.set(key, value);
+            this._url.searchParams.set(key, value);
         }
-        const newUrl = '#' + this.url.pathname + this.url.search;
+        const newUrl = '#' + this._url.pathname + this._url.search;
 
         window.history.replaceState({}, '', newUrl);
     }
 
     update() {
-        this.url = new URL(
+        this._url = new URL(
             window.location.hash.replace(HASH_STARTED_REGEXP, ''),
             window.location.protocol + window.location.host
         );

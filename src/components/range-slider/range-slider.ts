@@ -2,62 +2,62 @@ import { RangeModelView } from '../../model/model';
 import './range-slider.css';
 
 export class RangeSlider {
-    private fromSlider: HTMLInputElement;
-    private toSlider: HTMLInputElement;
-    private sliderColor = '#C0B9C7';
-    private rangeColor = '#6F6777';
-    private formValueMin: HTMLDivElement;
-    private formValueMax: HTMLDivElement;
-    private modelView: RangeModelView;
+    private _fromSlider: HTMLInputElement;
+    private _toSlider: HTMLInputElement;
+    private _sliderColor = '#C0B9C7';
+    private _rangeColor = '#6F6777';
+    private _formValueMin: HTMLDivElement;
+    private _formValueMax: HTMLDivElement;
+    private _modelView: RangeModelView;
 
     constructor(modelView: RangeModelView) {
-        this.modelView = modelView;
+        this._modelView = modelView;
     }
 
     controlFromSlider() {
-        const from = Number(this.fromSlider.value);
-        const to = Number(this.toSlider.value);
+        const from = Number(this._fromSlider.value);
+        const to = Number(this._toSlider.value);
 
         if (from > to) {
-            this.fromSlider.value = to.toString();
+            this._fromSlider.value = to.toString();
         }
-        this.modelView.low = Number(this.fromSlider.value);
-        this.formValueMin.textContent = `Min: ${this.fromSlider.value}`;
+        this._modelView.low = Number(this._fromSlider.value);
+        this._formValueMin.textContent = `Min: ${this._fromSlider.value}`;
 
         this.fillSlider();
     }
 
     controlToSlider() {
-        const from = Number(this.fromSlider.value);
-        const to = Number(this.toSlider.value);
+        const from = Number(this._fromSlider.value);
+        const to = Number(this._toSlider.value);
 
         if (from <= to) {
-            this.toSlider.value = to.toString();
+            this._toSlider.value = to.toString();
         } else {
-            this.toSlider.value = from.toString();
+            this._toSlider.value = from.toString();
         }
-        this.modelView.high = Number(this.toSlider.value);
-        this.formValueMax.textContent = `Max: ${this.toSlider.value}`;
+        this._modelView.high = Number(this._toSlider.value);
+        this._formValueMax.textContent = `Max: ${this._toSlider.value}`;
         this.fillSlider();
     }
 
     fillSlider(): void {
-        const from = Number(this.fromSlider.value);
-        const to = Number(this.toSlider.value);
-        const toMin = Number(this.toSlider.min);
-        const toMax = Number(this.toSlider.max);
+        const from = Number(this._fromSlider.value);
+        const to = Number(this._toSlider.value);
+        const toMin = Number(this._toSlider.min);
+        const toMax = Number(this._toSlider.max);
 
         const rangeDistance = toMax - toMin;
         const fromPosition = from - toMin;
         const toPosition = to - toMin;
-        this.toSlider.style.background = `linear-gradient(
+        this._toSlider.style.background = `linear-gradient(
           to right,
-          ${this.sliderColor} 0%,
-          ${this.sliderColor} ${(fromPosition / rangeDistance) * 100}%,
-          ${this.rangeColor} ${(fromPosition / rangeDistance) * 100}%,
-          ${this.rangeColor} ${(toPosition / rangeDistance) * 100}%,
-          ${this.sliderColor} ${(toPosition / rangeDistance) * 100}%,
-          ${this.sliderColor} 100%)`;
+          ${this._sliderColor} 0%,
+          ${this._sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+          ${this._rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+          ${this._rangeColor} ${(toPosition / rangeDistance) * 100}%,
+          ${this._sliderColor} ${(toPosition / rangeDistance) * 100}%,
+          ${this._sliderColor} 100%)`;
     }
 
     render() {
@@ -66,25 +66,25 @@ export class RangeSlider {
         const slidersControl = document.createElement('div') as HTMLDivElement;
         slidersControl.className = 'sliders-control';
 
-        this.fromSlider = document.createElement('input') as HTMLInputElement;
-        this.fromSlider.id = 'fromSlider';
-        this.fromSlider.type = 'range';
-        this.fromSlider.addEventListener('input', this.controlFromSlider.bind(this));
+        this._fromSlider = document.createElement('input') as HTMLInputElement;
+        this._fromSlider.id = 'fromSlider';
+        this._fromSlider.type = 'range';
+        this._fromSlider.addEventListener('input', this.controlFromSlider.bind(this));
 
-        this.toSlider = document.createElement('input') as HTMLInputElement;
-        this.toSlider.id = 'toSlider';
-        this.toSlider.type = 'range';
-        this.toSlider.addEventListener('input', this.controlToSlider.bind(this));
+        this._toSlider = document.createElement('input') as HTMLInputElement;
+        this._toSlider.id = 'toSlider';
+        this._toSlider.type = 'range';
+        this._toSlider.addEventListener('input', this.controlToSlider.bind(this));
 
         const formValues = document.createElement('div') as HTMLDivElement;
         formValues.className = 'form-values';
 
-        this.formValueMin = document.createElement('div') as HTMLDivElement;
-        this.formValueMax = document.createElement('div') as HTMLDivElement;
+        this._formValueMin = document.createElement('div') as HTMLDivElement;
+        this._formValueMax = document.createElement('div') as HTMLDivElement;
 
         rangeContainer.append(slidersControl, formValues);
-        slidersControl.append(this.fromSlider, this.toSlider);
-        formValues.append(this.formValueMin, this.formValueMax);
+        slidersControl.append(this._fromSlider, this._toSlider);
+        formValues.append(this._formValueMin, this._formValueMax);
 
         this.updateFromSlider();
         this.updateToSlider();
@@ -94,17 +94,17 @@ export class RangeSlider {
     }
 
     updateFromSlider() {
-        this.fromSlider.min = `${this.modelView.range.min}`;
-        this.fromSlider.max = `${this.modelView.range.max}`;
-        this.fromSlider.value = `${this.modelView.low}`;
-        this.formValueMin.textContent = `Min: ${this.fromSlider.value}`;
+        this._fromSlider.min = `${this._modelView.range.min}`;
+        this._fromSlider.max = `${this._modelView.range.max}`;
+        this._fromSlider.value = `${this._modelView.low}`;
+        this._formValueMin.textContent = `Min: ${this._fromSlider.value}`;
     }
 
     updateToSlider() {
-        this.toSlider.min = `${this.modelView.range.min}`;
-        this.toSlider.max = `${this.modelView.range.max}`;
-        this.toSlider.value = `${this.modelView.high}`;
-        this.formValueMax.textContent = `Max: ${this.toSlider.value}`;
+        this._toSlider.min = `${this._modelView.range.min}`;
+        this._toSlider.max = `${this._modelView.range.max}`;
+        this._toSlider.value = `${this._modelView.high}`;
+        this._formValueMax.textContent = `Max: ${this._toSlider.value}`;
     }
 
     public rerender(): void {

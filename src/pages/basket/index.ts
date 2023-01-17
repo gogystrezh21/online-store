@@ -3,10 +3,11 @@ import Page from '../../components/templates/page';
 import { Model } from '../../model/model';
 import { IProduct } from '../../types';
 import { Router } from '../router';
+import { BasketText } from '../../types/index';
 import './index.css';
 
 class BasketPage extends Page {
-    private title = 'Basket Page';
+    private _title = 'Basket Page';
     productId: string;
     model: Model;
     currentProduct: IProduct;
@@ -55,7 +56,7 @@ class BasketPage extends Page {
         const textSummary = document.createElement('h2');
         textSummary.classList.add('text-product');
         navSummary.appendChild(textSummary);
-        textSummary.textContent = 'Summary';
+        textSummary.textContent = BasketText.summaryText;
 
         const summaryInfo = document.createElement('div');
         summaryInfo.classList.add('card', 'card-summary');
@@ -63,8 +64,9 @@ class BasketPage extends Page {
 
         const productsText = document.createElement('h2');
         productsText.classList.add('products-amount');
-        if (localStorage.getItem('count')) {
-            productsText.innerText = `${'Products: ' + localStorage.getItem('count')}`;
+        const countValue = localStorage.getItem('count');
+        if (countValue) {
+            productsText.innerText = `${'Products: ' + countValue}`;
         } else {
             productsText.innerText = `${'Products: ' + 0}`;
         }
@@ -97,26 +99,26 @@ class BasketPage extends Page {
         summaryInfo.appendChild(addedPromos);
         const addedPromosText = document.createElement('h4');
         addedPromosText.classList.add('card', 'added-text');
-        addedPromosText.textContent = 'Added Promos:';
+        addedPromosText.textContent = BasketText.promos;
         addedPromos.appendChild(addedPromosText);
         addedPromos.style.display = 'none';
 
         const rolling = document.createElement('h4');
         rolling.classList.add('rolling');
-        rolling.textContent = 'Rolling-Scopes -10%';
+        rolling.textContent = BasketText.rsPromo;
         summaryInfo.appendChild(rolling);
         const rollingInside = document.createElement('h4');
         rollingInside.classList.add('rolling');
-        rollingInside.textContent = 'Rolling-Scopes -10%';
+        rollingInside.textContent = BasketText.rsPromo;
         addedPromos.appendChild(rollingInside);
         rollingInside.style.display = 'none';
         const addRolling = document.createElement('button');
         addRolling.classList.add('btn', 'btn-primary', 'btn-sm', 'add-rolling');
-        addRolling.textContent = 'Add';
+        addRolling.textContent = BasketText.addText;
         rolling.appendChild(addRolling);
         const addRollingInside = document.createElement('button');
         addRollingInside.classList.add('btn', 'btn-primary', 'btn-sm', 'add-rolling-inside');
-        addRollingInside.textContent = 'Drop';
+        addRollingInside.textContent = BasketText.dropText;
         rollingInside.appendChild(addRollingInside);
         rolling.style.display = 'none';
         addRolling.style.display = 'none';
@@ -124,7 +126,7 @@ class BasketPage extends Page {
         const textProduct = document.createElement('h2');
         textProduct.classList.add('text-product');
         nav.appendChild(textProduct);
-        textProduct.textContent = 'Products in basket';
+        textProduct.textContent = BasketText.productsBasket;
 
         input.oninput = function () {
             if (input?.value.trim().toLowerCase() === 'rs') {
@@ -134,7 +136,7 @@ class BasketPage extends Page {
                     event.preventDefault();
                     addedPromos.style.display = 'none';
                     addRolling.style.display = 'inline';
-                    addRolling.textContent = 'Add';
+                    addRolling.textContent = BasketText.addText;
                     totalText.style.textDecoration = 'none';
                     totalTextTen.style.display = 'none';
                 });
@@ -143,7 +145,7 @@ class BasketPage extends Page {
                 }
                 addRolling.addEventListener('click', (event) => {
                     event.preventDefault();
-                    if (addRolling.textContent === 'Add') {
+                    if (addRolling.textContent === BasketText.addText) {
                         totalText.style.textDecoration = 'line-through';
                         addedPromos.style.display = 'block';
                         rollingInside.style.display = 'block';
@@ -160,7 +162,7 @@ class BasketPage extends Page {
         const noProducts = document.createElement('h4');
         noProducts.classList.add('no-products');
         nav.append(noProducts);
-        noProducts.textContent = 'Basket is empty!';
+        noProducts.textContent = BasketText.emptyBasket;
         noProducts.style.display = 'none';
 
         const promo = document.createElement('h5');
@@ -169,7 +171,7 @@ class BasketPage extends Page {
         summaryInfo.appendChild(promo);
         const buy = document.createElement('button');
         buy.classList.add('btn', 'btn-primary', 'buy');
-        buy.textContent = 'Buy now';
+        buy.textContent = BasketText.buyNow;
         buy.id = 'modal-button';
         if (basketProducts.length === 0) {
             noProducts.style.display = 'block';
@@ -215,7 +217,7 @@ class BasketPage extends Page {
             let stockCountNum = 1;
             const minus = document.createElement('div');
             minus.classList.add('stock-minus');
-            minus.textContent = '-';
+            minus.textContent = BasketText.minusSign;
             stockCount.appendChild(minus);
 
             const stockSelect = document.createElement('div');
@@ -225,7 +227,7 @@ class BasketPage extends Page {
 
             const plus = document.createElement('div');
             plus.classList.add('stock-plus');
-            plus.textContent = '+';
+            plus.textContent = BasketText.plusSing;
             stockCount.appendChild(plus);
 
             const stockPrice = document.createElement('h6');

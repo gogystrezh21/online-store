@@ -2,18 +2,18 @@ import { Model } from '../model/model';
 import { Filter } from './filter';
 
 export class CategoryFilter extends Filter {
-    private model: Model;
+    private _model: Model;
     public constructor(model: Model) {
         super();
-        this.model = model;
+        this._model = model;
     }
     protected get parameters(): string[] {
-        return this.model.data?.categories ?? [];
+        return this._model.data?.categories ?? [];
     }
     protected set selectedParameters(arr: string[]) {
-        this.model.selectedCategories = arr;
+        this._model.selectedCategories = arr;
     }
     protected isChecked(parameter: string): boolean {
-        return this.model.selectedCategories.includes(parameter);
+        return this._model.selectedCategories.includes(parameter);
     }
 }

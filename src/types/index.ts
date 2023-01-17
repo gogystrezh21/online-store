@@ -2,6 +2,12 @@ export const enum ErrorTypes {
     Error_404 = 404,
 }
 
+export const enum FirstNumber {
+    visa = '4',
+    mastercard = '5',
+    belcard = '6',
+}
+
 export interface IProduct {
     id: number;
     title: string;

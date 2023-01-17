@@ -1,3 +1,4 @@
+import { defaultRange } from '../constants/constants';
 import { Router } from '../pages/router';
 import { IData, IProduct, IRange } from '../types';
 
@@ -33,8 +34,8 @@ export class Model extends EventTarget {
 
     set data(value: IData | null) {
         this._data = value;
-        this.priceModel.range = this._data?.price ?? { min: 0, max: 1 };
-        this.stockModel.range = this._data?.stock ?? { min: 0, max: 1 };
+        this.priceModel.range = this._data?.price ?? defaultRange;
+        this.stockModel.range = this._data?.stock ?? defaultRange;
         if (this._data != null) {
             this._numberProducts = this._data.products.length;
         }
@@ -63,10 +64,9 @@ export class Model extends EventTarget {
     }
 
     set selectedCategories(arr: string[]) {
-        if (!this.isStringArraysEquals(this._selectedCategories, arr)) {
-            this._selectedCategories = arr;
-            this.change();
-        }
+        if (this.isStringArraysEquals(this._selectedCategories, arr)) return;
+        this._selectedCategories = arr;
+        this.change();
     }
 
     get selectedBrands(): string[] {
@@ -74,10 +74,9 @@ export class Model extends EventTarget {
     }
 
     set selectedBrands(arr: string[]) {
-        if (!this.isStringArraysEquals(this._selectedBrands, arr)) {
-            this._selectedBrands = arr;
-            this.change();
-        }
+        if (this.isStringArraysEquals(this._selectedBrands, arr)) return;
+        this._selectedBrands = arr;
+        this.change();
     }
 
     get selectedSort(): string {
@@ -94,28 +93,24 @@ export class Model extends EventTarget {
     filter() {
         let filtered: IProduct[] = [];
         let current: IProduct[] = this._data?.products ?? [];
-        if (this._selectedBrands.length > 0) {
-            for (const product of current) {
-                for (const brand of this._selectedBrands) {
-                    if (product.brand === brand) {
-                        filtered.push(product);
+
+        function getFilteredArray(selectedParam: string[], productParam: 'brand' | 'category') {
+            if (selectedParam.length > 0) {
+                for (const product of current) {
+                    for (const param of selectedParam) {
+                        if (product[productParam] === param) {
+                            filtered.push(product);
+                        }
                     }
                 }
+                current = filtered;
+                filtered = [];
             }
-            current = filtered;
-            filtered = [];
         }
-        if (this._selectedCategories.length > 0) {
-            for (const product of current) {
-                for (const category of this._selectedCategories) {
-                    if (product.category === category) {
-                        filtered.push(product);
-                    }
-                }
-            }
-            current = filtered;
-            filtered = [];
-        }
+
+        getFilteredArray(this._selectedBrands, 'brand');
+        getFilteredArray(this._selectedCategories, 'category');
+
         current = this.priceModel.filterByRange(current);
         this._filteredProducts = this.stockModel.filterByRange(current);
         this._numberProducts = this._filteredProducts.length;
@@ -126,16 +121,24 @@ export class Model extends EventTarget {
             case 'Sort options':
                 break;
             case 'Sort by price ASC':
-                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => a.price - b.price);
+                this._filteredProducts = this._filteredProducts.sort(
+                    (firstProduct: IProduct, secondProduct: IProduct) => firstProduct.price - secondProduct.price
+                );
                 break;
             case 'Sort by price DESC':
-                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => b.price - a.price);
+                this._filteredProducts = this._filteredProducts.sort(
+                    (firstProduct: IProduct, secondProduct: IProduct) => secondProduct.price - firstProduct.price
+                );
                 break;
             case 'Sort by rating ASC':
-                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => a.rating - b.rating);
+                this._filteredProducts = this._filteredProducts.sort(
+                    (firstProduct: IProduct, secondProduct: IProduct) => firstProduct.rating - secondProduct.rating
+                );
                 break;
             case 'Sort by rating DESC':
-                this._filteredProducts = this._filteredProducts.sort((a: IProduct, b: IProduct) => b.rating - a.rating);
+                this._filteredProducts = this._filteredProducts.sort(
+                    (firstProduct: IProduct, secondProduct: IProduct) => secondProduct.rating - firstProduct.rating
+                );
                 break;
         }
     }
@@ -161,25 +164,26 @@ export class Model extends EventTarget {
         this.dispatchEvent(new CustomEvent('change'));
     }
 
-    isStringArraysEquals(a1: string[], a2: string[]): boolean {
-        a1 = a1.slice(0);
-        a2 = a2.slice(0);
-        let value: string | undefined;
-        while ((value = a2.pop()) !== undefined) {
-            const index = a1.indexOf(value);
-            if (index == -1) {
+    isStringArraysEquals(array1: string[], array2: string[]): boolean {
+        array1 = array1.slice(0);
+        array2 = array2.slice(0);
+        let value: string | undefined = array2.pop();
+
+        while (value !== undefined) {
+            const index = array1.indexOf(value);
+            if (index === -1) {
                 return false;
             }
-
-            a1.splice(index, 1);
+            array1.splice(index, 1);
+            value = array2.pop();
         }
 
-        return a1.length == 0;
+        return array1.length === 0;
     }
 }
 
 export abstract class RangeModelView extends EventTarget {
-    private _range: IRange = { min: 0, max: 1 };
+    private _range: IRange = defaultRange;
     private _low = 0;
     private _high = 1;
 

@@ -39,12 +39,12 @@ const baseConfig = {
         }),
         new CleanWebpackPlugin(),
         new EslintPlugin({ extensions: 'ts' }),
-        new CopyPlugin({ 
+        new CopyPlugin({
             patterns: [
                 { from: './src/assets', to: './assets' },
                 { from: './src/data.json', to: './' },
             ],
-        })
+        }),
     ],
 };
 
@@ -54,4 +54,3 @@ module.exports = ({ mode }) => {
 
     return merge(baseConfig, envConfig);
 };
-

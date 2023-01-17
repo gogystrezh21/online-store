@@ -5,11 +5,16 @@ const NOT_NUMBER_STARTED_REGEXP = /[^0-9]/g;
 
 const NAME_INPUT_REGEXP = /[a-z]{3,}(\s+[a-z]{3,}){1,}/gi;
 const PHONE_INPUT_REGEXP = /^\+([0-9]){9,}/;
-const ADDRESS_INPUT_REGEXP = /^[a-z]{5,}(\s+[a-z]{5,}){2,}$/gi;
+const ADDRESS_INPUT_REGEXP = /[a-z]{5,}/gi;
 const EMAIL_INPUT_REGEXP = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/;
 const CARD_NUMBER_INPUT_REGEXP = /^\d{4} \d{4} \d{4} \d{4}$/;
+const PART_CARD_NUMBER_REGEXP = /\d{4}/g;
+const CARD_NUMBER_WITHOUT_SPACES_REGEXP = /^\d{16}/;
 const VALID_THRU_INPUT_REGEXP = /^(\d{2})\/?(\d{2})/;
-const CODE_CARD_INPUT_REGEXP = /^[0-9]{3}$/;
+const CODE_CARD_INPUT_REGEXP = /^\d{3}/;
+const NOT_NUMBER_REGEXP = /[^\d]/g;
+const NOT_NUMBER_AND_NOT_PLUS_REGEXP = /[^\d+]/g;
+const SYMBOL_AND_PLUS_REGEXP = /.\+/g;
 
 export {
     ROOT_URL_REGEXP,
@@ -21,6 +26,11 @@ export {
     ADDRESS_INPUT_REGEXP,
     EMAIL_INPUT_REGEXP,
     CARD_NUMBER_INPUT_REGEXP,
+    PART_CARD_NUMBER_REGEXP,
+    CARD_NUMBER_WITHOUT_SPACES_REGEXP,
     VALID_THRU_INPUT_REGEXP,
     CODE_CARD_INPUT_REGEXP,
+    NOT_NUMBER_REGEXP,
+    SYMBOL_AND_PLUS_REGEXP,
+    NOT_NUMBER_AND_NOT_PLUS_REGEXP,
 };

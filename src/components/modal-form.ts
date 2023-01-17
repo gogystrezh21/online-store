@@ -1,13 +1,28 @@
 import { Modal } from 'bootstrap';
 import {
+    belcardSrc,
+    cardSrc,
+    mastercardSrc,
+    visaSrc,
+    maxExpirationDate,
+    maxMonthNumber,
+    minExpirationDate,
+} from '../constants/constants';
+import {
     ADDRESS_INPUT_REGEXP,
     CARD_NUMBER_INPUT_REGEXP,
+    CARD_NUMBER_WITHOUT_SPACES_REGEXP,
     CODE_CARD_INPUT_REGEXP,
     EMAIL_INPUT_REGEXP,
     NAME_INPUT_REGEXP,
+    NOT_NUMBER_AND_NOT_PLUS_REGEXP,
+    NOT_NUMBER_REGEXP,
+    PART_CARD_NUMBER_REGEXP,
     PHONE_INPUT_REGEXP,
+    SYMBOL_AND_PLUS_REGEXP,
     VALID_THRU_INPUT_REGEXP,
 } from '../constants/regexp';
+import { FirstNumber } from '../types';
 
 export class ModalForm {
     private modal: Modal;
@@ -46,22 +61,22 @@ export class ModalForm {
             isValid = this.setValid(validThru.value.match(VALID_THRU_INPUT_REGEXP), validThru) && isValid;
             isValid = this.setValid(code.value.match(CODE_CARD_INPUT_REGEXP), code) && isValid;
 
-            if (isValid) {
-                this.modal.hide();
-                localStorage.clear();
-                this.resultModal.show();
-                const content = document.querySelector('.result-modal-content') as Element;
-                let time = 3;
-                setInterval(() => {
-                    time -= 1;
-                    content.textContent = `Order is processed. Go to the main page after ${time}`;
-                }, 1000);
-                setTimeout(() => {
-                    this.resultModal.hide();
-                    window.location.href = '/#/main-page';
-                    window.location.reload();
-                }, 3000);
-            }
+            if (!isValid) return;
+
+            this.modal.hide();
+            localStorage.clear();
+            this.resultModal.show();
+            const content = document.querySelector('.result-modal-content') as Element;
+            let time = 3;
+            setInterval(() => {
+                time -= 1;
+                content.textContent = `Order is processed. Go to the main page after ${time}`;
+            }, 1000);
+            setTimeout(() => {
+                this.resultModal.hide();
+                window.location.href = '/#/main-page';
+                window.location.reload();
+            }, 3000);
         });
 
         nameInput.addEventListener('input', () => {
@@ -69,14 +84,17 @@ export class ModalForm {
         });
 
         phoneNumber.addEventListener('input', () => {
-            let value = phoneNumber.value.replace(/[^\d+]/g, '');
-            value = value.replace(/.\+/g, (s) => s[0]);
+            let value = phoneNumber.value.replace(NOT_NUMBER_AND_NOT_PLUS_REGEXP, '');
+            value = value.replace(SYMBOL_AND_PLUS_REGEXP, (s) => s[0]);
             phoneNumber.value = value;
             this.setValid(phoneNumber.value.match(PHONE_INPUT_REGEXP), phoneNumber);
         });
 
         deliveryAddress.addEventListener('input', () => {
-            this.setValid(deliveryAddress.value.match(ADDRESS_INPUT_REGEXP), deliveryAddress);
+            const matches = deliveryAddress.value.match(ADDRESS_INPUT_REGEXP);
+            const addressInputMaxWords = 3;
+            const isValid = Array.isArray(matches) && matches.length >= addressInputMaxWords;
+            this.setValid(isValid, deliveryAddress);
         });
 
         email.addEventListener('input', () => {
@@ -84,58 +102,63 @@ export class ModalForm {
         });
 
         cardNumber.addEventListener('input', () => {
-            let value = cardNumber.value.replace(/[^\d]/g, '');
-            const m = value.match(/^\d{16}/);
-            if (m !== null) {
-                value = m[0];
+            let value = cardNumber.value.replace(NOT_NUMBER_REGEXP, '');
+            const matches = value.match(CARD_NUMBER_WITHOUT_SPACES_REGEXP);
+            if (matches !== null) {
+                value = matches[0];
             }
-            value = value.replace(/\d{4}/g, (s) => s + ' ');
+            value = value.replace(PART_CARD_NUMBER_REGEXP, (s) => s + ' ');
             cardNumber.value = value.trim();
+
             switch (cardNumber.value[0]) {
-                case '4':
-                    cardImage.src = './assets/visa.png';
+                case FirstNumber.visa:
+                    cardImage.src = visaSrc;
                     break;
-                case '5':
-                    cardImage.src = './assets/mastercard.png';
+                case FirstNumber.mastercard:
+                    cardImage.src = mastercardSrc;
                     break;
-                case '6':
-                    cardImage.src = './assets/belcard.png';
+                case FirstNumber.belcard:
+                    cardImage.src = belcardSrc;
                     break;
                 default:
-                    cardImage.src = './assets/card.png';
+                    cardImage.src = cardSrc;
             }
             this.setValid(cardNumber.value.match(CARD_NUMBER_INPUT_REGEXP), cardNumber);
         });
 
         code.addEventListener('input', () => {
-            let value = code.value.replace(/[^\d]/g, '');
-            const m = value.match(/^\d{3}/);
-            if (m !== null) {
-                value = m[0];
+            let value = code.value.replace(NOT_NUMBER_REGEXP, '');
+            const matches = value.match(CODE_CARD_INPUT_REGEXP);
+            if (matches !== null) {
+                value = matches[0];
             }
             code.value = value;
             this.setValid(code.value.match(CODE_CARD_INPUT_REGEXP), code);
         });
 
         validThru.addEventListener('input', () => {
-            const selectionOffset = validThru.selectionStart ?? 0;
+            let selectionOffset = validThru.selectionStart ?? 0;
 
-            const value = validThru.value.replace(/[^\d]/g, '');
-            const m = value.match(/^(\d{2})\/?(\d{2})/);
-            if (m !== null) {
-                if (Number(m[1]) > 12) {
-                    m[1] = '12';
+            const value = validThru.value.replace(NOT_NUMBER_REGEXP, '');
+            const matches = value.match(VALID_THRU_INPUT_REGEXP);
+            if (matches !== null) {
+                if (Number(matches[1]) > maxMonthNumber) {
+                    matches[1] = `${maxMonthNumber}`;
                 }
-                validThru.value = `${m[1]}/${m[2]}`;
+                validThru.value = `${matches[1]}/${matches[2]}`;
+            } else {
+                validThru.value = value;
             }
-
-            validThru.selectionStart = selectionOffset + 1;
+            validThru.selectionStart = ++selectionOffset;
             validThru.selectionEnd = validThru.selectionStart;
             this.setValid(validThru.value.match(VALID_THRU_INPUT_REGEXP), validThru);
 
-            if (m !== null && (Number(m[2]) > 27 || Number(m[2]) < 23)) {
-                validThru.classList.add('is-invalid');
+            if (
+                matches !== null &&
+                (Number(matches[2]) > maxExpirationDate || Number(matches[2]) < minExpirationDate)
+            ) {
                 validThru.classList.remove('is-valid');
+                validThru.classList.add('is-invalid');
             }
         });
     }
@@ -144,15 +167,14 @@ export class ModalForm {
         this.modal.show();
     }
 
-    private setValid(m: RegExpMatchArray | null, element: HTMLInputElement): boolean {
-        const isValid = m !== null;
-        if (isValid) {
-            element.classList.add('is-valid');
-            element.classList.remove('is-invalid');
-        } else {
-            element.classList.add('is-invalid');
-            element.classList.remove('is-valid');
-        }
+    private setValid(matchesOrIsValid: RegExpMatchArray | boolean | null, element: HTMLInputElement): boolean {
+        const isValid = matchesOrIsValid !== null && matchesOrIsValid !== false;
+
+        const classToAdd = isValid ? 'is-valid' : 'is-invalid';
+        const classToRemove = isValid ? 'is-invalid' : 'is-valid';
+
+        element.classList.add(classToAdd);
+        element.classList.remove(classToRemove);
 
         return isValid;
     }
@@ -165,7 +187,7 @@ export class ModalForm {
         const email = document.getElementById('e-mail') as HTMLInputElement;
         const cardNumber = document.getElementById('card-number') as HTMLInputElement;
         const code = document.getElementById('code') as HTMLInputElement;
-        const validThru = document.getElementById('valid-thru') as HTMLInputElement;
+        const validUntil = document.getElementById('valid-thru') as HTMLInputElement;
         const cardImage = document.getElementById('card-image') as HTMLImageElement;
         const modal = document.getElementById('exampleModal') as HTMLDivElement;
         const resultModal = document.getElementById('resultModal') as HTMLDivElement;
@@ -178,7 +200,7 @@ export class ModalForm {
             email,
             cardNumber,
             code,
-            validThru,
+            validUntil,
             cardImage,
             modal,
             resultModal

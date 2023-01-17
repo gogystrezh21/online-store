@@ -1,7 +1,7 @@
 import { RangeModelView } from '../../model/model';
-import './double-slider.css';
+import './range-slider.css';
 
-export class DoubleSlider {
+export class RangeSlider {
     private fromSlider: HTMLInputElement;
     private toSlider: HTMLInputElement;
     private sliderColor = '#C0B9C7';

@@ -26,10 +26,6 @@ export abstract class Filter {
         this.selectedParameters = arr;
     }
 
-    rerender(): void {
-        this.renderParameters();
-    }
-
     renderParameters(): void {
         for (const checkbox of this.checkboxes) {
             checkbox.parentElement?.remove();

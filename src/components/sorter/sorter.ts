@@ -1,3 +1,4 @@
+import { sortParameters } from '../../constants/constants';
 import { Model } from '../../model/model';
 
 export class Sorter {
@@ -26,14 +27,6 @@ export class Sorter {
     }
 
     renderParameters(): HTMLSelectElement {
-        const sortParameters = [
-            'Sort options:',
-            'Sort by price ASC',
-            'Sort by price DESC',
-            'Sort by rating ASC',
-            'Sort by rating DESC',
-        ];
-
         if (this.options.length !== 0) {
             for (const option of this.options) {
                 option.remove();

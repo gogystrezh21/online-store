@@ -1,6 +1,6 @@
 import { BrandFilter } from '../../components/brand-filter';
 import { CategoryFilter } from '../../components/category-filter';
-import { DoubleSlider } from '../../components/double-slider/double-slider';
+import { RangeSlider } from '../../components/range-slider/range-slider';
 import { Sorter } from '../../components/sorter/sorter';
 import Page from '../../components/templates/page';
 import { NOT_NUMBER_STARTED_REGEXP } from '../../constants/regexp';
@@ -15,8 +15,8 @@ class MainPage extends Page {
     private model: Model;
     private categoryFilter: CategoryFilter;
     private brandFilter: BrandFilter;
-    private priceSlider: DoubleSlider;
-    private stockSlider: DoubleSlider;
+    private priceSlider: RangeSlider;
+    private stockSlider: RangeSlider;
     private productsGrid: HTMLDivElement;
     private router: Router;
     private sorter: Sorter;
@@ -29,8 +29,8 @@ class MainPage extends Page {
         this.categoryFilter = new CategoryFilter(model);
         this.brandFilter = new BrandFilter(model);
         this.model.addEventListener('change', this.rerender.bind(this));
-        this.priceSlider = new DoubleSlider(model.priceModel);
-        this.stockSlider = new DoubleSlider(model.stockModel);
+        this.priceSlider = new RangeSlider(model.priceModel);
+        this.stockSlider = new RangeSlider(model.stockModel);
         this.sorter = new Sorter(model);
     }
 
@@ -293,8 +293,8 @@ class MainPage extends Page {
 
     rerender() {
         this.renderProducts();
-        this.brandFilter.rerender();
-        this.categoryFilter.rerender();
+        this.brandFilter.renderParameters();
+        this.categoryFilter.renderParameters();
         this.priceSlider.rerender();
         this.stockSlider.rerender();
         this.sorter.rerender();
